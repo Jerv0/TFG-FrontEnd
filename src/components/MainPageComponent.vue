@@ -7,7 +7,7 @@ import FormCuidadorComponent from './FormComponent.vue';
 const cuidador = process.env.CUIDADOR;
 const persona = process.env.PERSONA;
 //VARIABLES DEL COMPONENTE
-const showForm = ref<boolean>(false);
+const showForm = ref<boolean>(true);
 const type = ref<string>('');
 
 //METODOS
