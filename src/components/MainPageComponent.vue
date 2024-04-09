@@ -4,10 +4,10 @@ import { ref } from 'vue';
 import FormCuidadorComponent from './FormComponent.vue';
 
 //VARIABLES GLOBALES
-const cuidador = process.env.CUIDADOR;
-const persona = process.env.PERSONA;
+const CUIDADOR = process.env.CUIDADOR;
+const PERSONA = process.env.PERSONA;
 //VARIABLES DEL COMPONENTE
-const showForm = ref<boolean>(true);
+const showForm = ref<boolean>(true); //CAMBIAR A FALSE PARA QUE NO SALGA EL FORMULARIO CARGADO
 const type = ref<string>('');
 
 //METODOS
@@ -23,8 +23,8 @@ const closeForm = () => {
 
 <template>
     <FormCuidadorComponent v-if="showForm" :showForm="showForm" :type="type" @closeForm="closeForm" />
-    <q-btn align="between" class="btn-fixed-width" color="accent" label="Cuidador" icon="" @click="openForm(cuidador)" />
-    <q-btn align="between" class="btn-fixed-width" color="accent" label="Persona" icon="" @click="openForm(persona)" />
+    <q-btn align="between" class="btn-fixed-width" color="accent" label="Cuidador" icon="" @click="openForm(CUIDADOR)" />
+    <q-btn align="between" class="btn-fixed-width" color="accent" label="Persona" icon="" @click="openForm(PERSONA)" />
     {{ showForm }}
 </template>
 
