@@ -1,5 +1,8 @@
 import { reactive } from 'vue';
 
+/**
+ * Tipo que define la estructura esperada para validar contraseñas.
+ */
 type PasswordValidator = {
     length: boolean;
     capital: boolean;
@@ -7,18 +10,38 @@ type PasswordValidator = {
     symbol: boolean;
 };
 
+/**
+ * Valida si una cadena de texto representa una fecha válida anterior o igual a la fecha actual.
+ * @param {string} str - La cadena de texto que se va a validar como fecha.
+ * @returns {boolean} true si la cadena de texto representa una fecha válida anterior o igual a la fecha actual, de lo contrario, false.
+ */
 export const validateDate = (str: string): boolean => {
     return new Date(str) <= new Date();
 };
 
+/**
+ * Valida si una cadena de texto es un formato de correo electrónico válido.
+ * @param {string} email - La cadena de texto que se va a validar como correo electrónico.
+ * @returns {boolean} true si la cadena de texto cumple con el formato de correo electrónico válido, de lo contrario, false.
+ */
 export const validateEmail = (email: string): boolean => {
-    return /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(email);
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
 
+/**
+ * Valida si una cadena de texto está presente y no está vacía.
+ * @param {string} str - La cadena de texto que se va a validar.
+ * @returns {boolean} true si la cadena de texto no está vacía, de lo contrario, false.
+ */
 export const validateText = (str: string): boolean => {
-    return str && str.length > 0 ? true : false;
+    return str.trim().length > 0;
 };
 
+/**
+ * Formatea una cadena de texto capitalizando la primera letra de cada palabra y eliminando espacios adicionales.
+ * @param {string} str - La cadena de texto que se formateará.
+ * @returns {string} La cadena de texto formateada.
+ */
 export const formatString = (str: string): string => {
     // Divide la cadena y quita espacios
     const parts: string[] = str.trim().split(/\s+/);
@@ -30,8 +53,7 @@ export const formatString = (str: string): string => {
     return formatParts.join(' ');
 };
 
-// https://medium.com/@bklik/form-validation-with-quasar-framework-and-the-vue-js-composition-api-9c67f8536abd
-//mirar para el formateo de contraseñas y enseñar bien los errores
+
 export const validPassword = reactive(<PasswordValidator>{
     length: false,
     capital: false,
@@ -39,6 +61,11 @@ export const validPassword = reactive(<PasswordValidator>{
     symbol: false,
 });
 
+/**
+ * Valida si una cadena cumple con ciertos criterios de complejidad.
+ * @param {string} str - La cadena que se va a validar.
+ * @returns {boolean} true si la cadena cumple con los criterios , si no, false.
+ */
 export const validatePassword = (str: string): boolean => {
     // Test length
     validPassword.length = str.length >= 9;

@@ -1,14 +1,21 @@
 <script setup lang="ts">
 //IMPORTS
 import { ref } from 'vue';
+import { toast } from '../utils/formatNotify';
 import { validateEmail, validateText, validateDate, formatString, validatePassword, validPassword } from '../utils/funcionesValidar';
-//VARIABLES
+import { useQuasar } from 'quasar';
+//VARIABLE GLOBALES
+const CUIDADOR = process.env.CUIDADOR;
+//const PERSONA = process.env.PERSONA;
+
+//VARIABLES DEL COMPONENTE
 interface Props {
     showForm: boolean;
     type: string;
 }
 
 const props = defineProps<Props>();
+const q = useQuasar();
 
 const name = ref<string>('');
 const surname = ref<string>('');
@@ -16,6 +23,9 @@ const date = ref<string>('');
 const email = ref<string>('');
 const password = ref<string>('');
 const passwordConfirm = ref<string>('');
+const file = ref<File>();
+
+//METODOS
 
 const emit = defineEmits<{
     closeForm: [];
@@ -27,12 +37,7 @@ const closeForm = () => {
 };
 
 const onReset = () => {
-    name.value = '';
-    surname.value = '';
-    date.value = '';
-    email.value = '';
-    password.value = '';
-    passwordConfirm.value = '';
+    [name, surname, date, email, password, passwordConfirm].forEach((field) => (field.value = ''));
 };
 const onSubmit = () => {
     //llamada a enviar los datos
@@ -43,10 +48,17 @@ const onSubmit = () => {
         email: formatString(email.value),
         password: password.value,
     };
-    //Llamada a la api / base de datos para subirlo
 
+    //quizas un post a la maquina para guardar el archivo (?)
+    console.log(file.value);
+    //Llamada a la api / base de datos para subirlo
     console.log(datos);
+
+    toast(q, 'positive', 'Formulario Enviado');
+    closeForm();
 };
+/** */
+const onRejected = () => toast(q, 'negative', 'archivo no valido');
 </script>
 
 <template>
@@ -77,6 +89,10 @@ const onSubmit = () => {
                 </div>
             </div>
             <q-input label="Confirm Password *" v-model="passwordConfirm" :disable="!validatePassword(password)" type="password" :rules="[(val) => (val && val === password) || 'No coinciden.']"> </q-input>
+            <div v-if="props.type === CUIDADOR">
+                <!--  no se si es mejor meter la igualacion a "cuidador" -->
+                <q-file v-model="file" filled label="Seleccionar archivo PDF" max-files="1" accept=".pdf" @rejected="onRejected" max-file-size="4096" />
+            </div>
             <div>
                 <q-btn label="Enviar" type="submit" color="primary" />
                 <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
