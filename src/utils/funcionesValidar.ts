@@ -1,3 +1,12 @@
+import { reactive } from 'vue';
+
+type PasswordValidator = {
+    length: boolean;
+    capital: boolean;
+    number: boolean;
+    symbol: boolean;
+};
+
 export const validateDate = (str: string): boolean => {
     return new Date(str) <= new Date();
 };
@@ -21,5 +30,23 @@ export const formatString = (str: string): string => {
     return formatParts.join(' ');
 };
 
-// https://medium.com/@bklik/form-validation-with-quasar-framework-and-the-vue-js-composition-api-9c67f8536abd 
+// https://medium.com/@bklik/form-validation-with-quasar-framework-and-the-vue-js-composition-api-9c67f8536abd
 //mirar para el formateo de contraseñas y enseñar bien los errores
+export const validPassword = reactive(<PasswordValidator>{
+    length: false,
+    capital: false,
+    number: false,
+    symbol: false,
+});
+
+export const validatePassword = (str: string): boolean => {
+    // Test length
+    validPassword.length = str.length >= 9;
+    // Test capital
+    validPassword.capital = /^(?=.*[A-Z])/.test(str);
+    // Test number
+    validPassword.number = /^(?=.*[0-9])/.test(str);
+    // Test symbol
+    validPassword.symbol = /^(?=.*[!.@#\$%\^&\*_\-=+])/.test(str);
+    return validPassword.length && validPassword.capital && validPassword.number && validPassword.symbol;
+};
