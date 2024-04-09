@@ -22,28 +22,9 @@ const closeForm = () => {
 </script>
 
 <template>
-    <FormCuidadorComponent
-        v-if="showForm"
-        :showForm="showForm"
-        :type="type"
-        @closeForm="closeForm"
-    />
-    <q-btn
-        align="between"
-        class="btn-fixed-width"
-        color="accent"
-        label="Cuidador"
-        icon=""
-        @click="openForm(cuidador)"
-    />
-    <q-btn
-        align="between"
-        class="btn-fixed-width"
-        color="accent"
-        label="Persona"
-        icon=""
-        @click="openForm(persona)"
-    />
+    <FormCuidadorComponent v-if="showForm" :showForm="showForm" :type="type" @closeForm="closeForm" />
+    <q-btn align="between" class="btn-fixed-width" color="accent" label="Cuidador" icon="" @click="openForm(cuidador)" />
+    <q-btn align="between" class="btn-fixed-width" color="accent" label="Persona" icon="" @click="openForm(persona)" />
     {{ showForm }}
 </template>
 
