@@ -87,7 +87,7 @@ module.exports = configure(function (/* ctx */) {
 
         // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
         framework: {
-            plugins: ['Notify'],
+            plugins: ['Notify','Dialog'],
 
             config: {
                 // optional (v0.17+)

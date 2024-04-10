@@ -53,6 +53,15 @@ export const formatString = (str: string): string => {
     return formatParts.join(' ');
 };
 
+/**
+ * Elimina un carácter específico de una cadena dada.
+ * @param {string} str - La cadena de entrada.
+ * @param {string} character - El carácter que se desea eliminar.
+ * @returns {string} - La cadena de entrada sin el carácter especificado.
+ */
+export const removeCharacter = (str: string, character: string): string => {
+    return str.split(character).join('');
+};
 
 export const validPassword = reactive(<PasswordValidator>{
     length: false,
