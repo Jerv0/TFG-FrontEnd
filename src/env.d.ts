@@ -6,6 +6,6 @@ declare namespace NodeJS {
         VUE_ROUTER_MODE: 'hash' | 'history' | 'abstract' | undefined;
         VUE_ROUTER_BASE: string | undefined;
         CUIDADOR: string;
-        PERSONA: string;
+        PACIENTE: string;
     }
 }

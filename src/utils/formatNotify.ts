@@ -21,7 +21,7 @@ export const toastRaro = (q: QVueGlobals, type: string, message: string) => {
  * @param {number} [time=3] - La duración de la notificación en segundos (opcional, por defecto 3 segundos).
  * @returns {void}
  */
-export const toast = (tipo: string, mensaje: string, time = 3) => {
+const toast = (tipo: string, mensaje: string, time = 3) => {
     const opciones = {
         message: mensaje,
         color: tipo,
@@ -30,3 +30,5 @@ export const toast = (tipo: string, mensaje: string, time = 3) => {
     // Muestra la notificación
     Notify.create(opciones);
 };
+
+export default toast;

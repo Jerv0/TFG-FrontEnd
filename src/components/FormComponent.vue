@@ -1,11 +1,11 @@
 <script setup lang="ts">
 //IMPORTS
 import { ref } from 'vue';
-import { toast } from '../utils/formatNotify';
+import toast from '../utils/formatNotify';
 import { validateEmail, validateText, validateDate, formatString, validatePassword, validPassword } from '../utils/funcionesValidar';
 //VARIABLE GLOBALES
-const CUIDADOR = process.env.CUIDADOR;
-//const PERSONA = process.env.PERSONA;
+const CUIDADOR = <string>process.env.CUIDADOR;
+//const PERSONA = <string>process.env.PERSONA;
 
 //VARIABLES DEL COMPONENTE
 interface Props {
