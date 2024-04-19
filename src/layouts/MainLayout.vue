@@ -15,7 +15,7 @@ defineOptions({
 </script>
 
 <template>
-    <q-layout view="lHh Lpr lFf">
+    <q-layout view="hHh lpR fFf">
         <q-header elevated>
             <q-toolbar>
                 <q-toolbar-title> {{ TITLE }} </q-toolbar-title>
@@ -27,11 +27,11 @@ defineOptions({
             <!-- Esto se tendria que actualizar con la foto , nombre , etc... de cuando este registrado el usuario -->
             <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 150px">
                 <div class="absolute-bottom bg-transparent">
-                    <q-avatar size="56px" class="q-mb-sm">
+                    <!-- <q-avatar size="56px" class="q-mb-sm">
                         <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
                     </q-avatar>
                     <div class="text-weight-bold">Razvan Stoenescu</div>
-                    <div>@rstoenescu</div>
+                    <div>@rstoenescu</div>  -->
                 </div>
             </q-img>
             <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
@@ -40,7 +40,7 @@ defineOptions({
                         <q-item-section avatar>
                             <q-icon :name="route.icon" />
                         </q-item-section>
-                        <q-item-section> {{ route.title }} </q-item-section>
+                        <q-item-section> {{ route.title}} </q-item-section>
                     </q-item>
                 </q-list>
                 <q-separator spaced />
@@ -53,6 +53,7 @@ defineOptions({
                 </q-item-label>
             </q-list> -->
         </q-drawer>
+
         <q-page-container>
             <router-view />
         </q-page-container>
@@ -63,5 +64,9 @@ defineOptions({
 .my-menu-link {
     color: white;
     background-color: #f2c037;
+}
+
+#hola{
+    border: 1px solid #000;
 }
 </style>

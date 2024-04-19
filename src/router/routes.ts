@@ -1,5 +1,6 @@
 import { Component } from 'vue';
 
+/**representa la estructura de cada elemento de la ruta */
 interface routeElement {
     path: string;
     component: () => Component;
@@ -10,27 +11,36 @@ interface routeElement {
 
 //https://m2.material.io/icons/ de aqui saco iconos
 
+/**todas las rutas de la aplicación: */
 const routes: routeElement[] = [
     {
         path: '/',
         component: () => import('layouts/MainLayout.vue'),
-        title: 'Principal',
+        title: 'Main', /**titulo de la ruta */
         icon: 'perm_identity',
-        children: [{ path: '', component: () => import('components/MainPageComponent.vue') }],
+        children: [{ path: '', component: () => import('components/MainPageComponent.vue') }], /**rutas secundarias */
     },
     {
-        path: '/registro',
+        path: '/Register',
         component: () => import('layouts/MainLayout.vue'),
-        title: 'Registro',
+        title: 'Register',
         icon: 'calendar_today',
         children: [{ path: '', component: () => import('components/FormComponent.vue') }],
     },
     {
-        path: '/view',
+        path: '/Login',
         component: () => import('layouts/MainLayout.vue'),
-        title: 'View',
+        title: 'Login',
         icon: 'account_circle',
-        children: [{ path: '', component: () => import('components/ViewComponent.vue') }],
+        children: [{ path: '', component: () => import('src/components/LoginComponent.vue') }],
+    },
+    {
+        path: '/paciente/id', 
+        component: () => import('components/ProfileComponent.vue'),
+    },
+    {
+        path: '/conversacion/id',
+        component: () => import('components/ConversationComponent.vue')
     },
     // Always leave this as last one,
     // but you can also remove it

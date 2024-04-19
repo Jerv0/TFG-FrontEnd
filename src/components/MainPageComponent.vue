@@ -2,32 +2,34 @@
 // IMPORTS
 import { ref } from 'vue';
 import { uid } from 'quasar';
-import FormComponent from './FormComponent.vue';
+import {store } from '../store/store'
 
 //VARIABLES GLOBALES
 const CUIDADOR = process.env.CUIDADOR;
 const PACIENTE = process.env.PACIENTE;
+
 //VARIABLES DEL COMPONENTE
-const showForm = ref<boolean>(true); //CAMBIAR A FALSE PARA QUE NO SALGA EL FORMULARIO CARGADO
-const type = ref<string>('');
+const showForm = ref<boolean>(false); 
 const id = ref<string>(uid());
+
+
 //METODOS
 const openForm = (typeP: string) => {
-    type.value = typeP;
+    store.type = typeP;
     showForm.value = true;
 };
 
-const closeForm = () => {
-    showForm.value = false;
-};
 </script>
 
+
 <template>
-    id Generado: {{ id }}
-    <FormComponent v-if="showForm" :showForm="showForm" :type="type" @closeForm="closeForm" />
-    <q-btn align="between" class="btn-fixed-width" color="accent" label="Cuidador" icon="" @click="openForm(CUIDADOR)" />
-    <q-btn align="between" class="btn-fixed-width" color="accent" label="Persona" icon="" @click="openForm(PACIENTE)" />
-    {{ showForm }}
+     <q-btn align="between" class="btn-fixed-width" color="accent" label="Ya tengo cuenta" icon="" to="/Login"/>
+    <h3>Bienvenido a nuestra página web</h3>
+    <p>{{id}}</p>
+    <q-btn align="between" class="btn-fixed-width" color="accent" label="Soy cuidador" icon="" @click="openForm(CUIDADOR)" to="/Register"/>
+    <q-btn align="between" class="btn-fixed-width" color="accent" label="Soy persona" icon="" @click="openForm(PACIENTE)" to="/Register" />
 </template>
 
-<style></style>
+<style>
+
+</style>

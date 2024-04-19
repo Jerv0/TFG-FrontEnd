@@ -3,18 +3,13 @@
 import { ref } from 'vue';
 import toast from '../utils/formatNotify';
 import { validateEmail, validateText, validateDate, formatString, validatePassword, validPassword } from '../utils/funcionesValidar';
-//VARIABLE GLOBALES
+import {store} from '../store/store'
+
+//VARIABLES DE ENTORNO
 const CUIDADOR = <string>process.env.CUIDADOR;
-//const PERSONA = <string>process.env.PERSONA;
+
 
 //VARIABLES DEL COMPONENTE
-interface Props {
-    showForm: boolean;
-    type: string;
-}
-
-const props = defineProps<Props>();
-
 const name = ref<string>('');
 const surname = ref<string>('');
 const date = ref<string>('');
@@ -23,18 +18,18 @@ const password = ref<string>('');
 const passwordConfirm = ref<string>('');
 const file = ref<File>();
 const phoneNumber = ref<string>('');
-//METODOS
 
+//MÉTODOS
 const emit = defineEmits<{
     closeForm: [];
 }>();
 
 const closeForm = () => {
-    //se puede meter mas codigo
     emit('closeForm');
 };
 
 const onReset = () => [name, surname, date, email, password, passwordConfirm, phoneNumber].forEach((field) => (field.value = ''));
+
 const onSubmit = () => {
     //llamada a enviar los datos
     const datos = {
@@ -46,8 +41,9 @@ const onSubmit = () => {
         phoneNumber: phoneNumber.value,
     };
 
-    //quizas un post a la maquina para guardar el archivo (?)
+    //quizás un post a la maquina para guardar el archivo (?)
     console.log(file.value);
+
     //Llamada a la api / base de datos para subirlo
     console.log(datos);
 
@@ -76,20 +72,21 @@ const onRejected = () => toast('negative', 'archivo no valido');
                 <div><q-icon :name="validPassword.symbol ? 'check_circle' : 'cancel'" :color="validPassword.symbol ? 'positive' : 'negative'" />Debe contener algun caracter especial: !@.#$%^&*()-_+=</div>
             </div>
             <q-input label="Confirm Password *" v-model="passwordConfirm" :disable="!validatePassword(password)" type="password" :rules="[(val) => (val && val === password) || 'No coinciden.']"> </q-input>
-            <div v-if="props.type === CUIDADOR">
-                <!--  no se si es mejor meter la igualacion a "cuidador" -->
+            
+            <div v-if="store.type === CUIDADOR">
                 <q-file v-model="file" filled label="Seleccionar archivo PDF" max-files="1" accept=".pdf" @rejected="onRejected" max-file-size="4096" />
             </div>
+
             <div>
                 <q-btn label="Enviar" type="submit" color="primary" />
                 <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
             </div>
         </q-form>
+        <q-btn align="between" class="btn-fixed-width" color="accent" label="Cerrar" icon="" @click="closeForm" to="/"/>
     </div>
+
     <div>
-        <p>Valor de showForm: {{ props.showForm }}</p>
-        <p>Valor de type: {{ props.type }}</p>
-        <q-btn align="between" class="btn-fixed-width" color="accent" label="Cerrar Formulario" icon="" @click="closeForm" />
+        
     </div>
 </template>
 

@@ -15,9 +15,10 @@
   "dependencies": {
     "@quasar/extras": "^1.16.4",
     "dotenv": "^16.4.5",
-    "quasar": "^2.8.0",
+    "pinia": "^2.1.7",
+    "quasar": "^2.15.3",
     "vue": "^3.4.21",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.3.2"
   },
   "devDependencies": {
     "@quasar/app": "^3.3.3",
