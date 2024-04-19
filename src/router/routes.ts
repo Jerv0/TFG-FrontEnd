@@ -36,11 +36,19 @@ const routes: routeElement[] = [
     },
     {
         path: '/paciente/id', 
-        component: () => import('components/ProfileComponent.vue'),
+        component: () => import('src/components/PatientComponent.vue'),
     },
     {
         path: '/conversacion/id',
         component: () => import('components/ConversationComponent.vue')
+    },
+    {
+        path: '/supervisor/id',
+        component: () => import('components/SupervisorComponent.vue')
+    },
+    {
+        path: '/admin/id',
+        component: () => import('components/AdminComponent.vue')
     },
     // Always leave this as last one,
     // but you can also remove it

@@ -26,8 +26,8 @@ const openForm = (typeP: string) => {
      <q-btn align="between" class="btn-fixed-width" color="accent" label="Ya tengo cuenta" icon="" to="/Login"/>
     <h3>Bienvenido a nuestra página web</h3>
     <p>{{id}}</p>
-    <q-btn align="between" class="btn-fixed-width" color="accent" label="Soy cuidador" icon="" @click="openForm(CUIDADOR)" to="/Register"/>
-    <q-btn align="between" class="btn-fixed-width" color="accent" label="Soy persona" icon="" @click="openForm(PACIENTE)" to="/Register" />
+    <q-btn align="between" class="btn-fixed-width" color="accent" label="Soy supervisor" icon="" @click="openForm(CUIDADOR)" to="/Register"/>
+    <q-btn align="between" class="btn-fixed-width" color="accent" label="Soy paciente" icon="" @click="openForm(PACIENTE)" to="/Register" />
 </template>
 
 <style>

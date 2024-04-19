@@ -18,10 +18,12 @@ const Login = () => {
         alert('rellene los datos correctamente')
     }else if(email.value === 'paciente' && password.value==='paciente'){
         router.push('/paciente/id')
-    }else if(email.value==='cuidador' && password.value==='cuidador'){
-        router.push('/cuidador/id')
+    }else if(email.value==='supervisor' && password.value==='supervisor'){
+        router.push('/supervisor/id')
     }else if(email.value==='admin' && password.value==='admin'){
         router.push('/admin/id')
+    }else{
+        alert('email o contraseña incorrectos')
     }
     console.log(data);
 }
