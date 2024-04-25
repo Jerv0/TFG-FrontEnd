@@ -15,27 +15,24 @@ interface routeElement {
 const routes: routeElement[] = [
     {
         path: '/',
-        component: () => import('layouts/MainLayout.vue'),
+        component: () => import('components/MainPageComponent.vue'),
         title: 'Main', /**titulo de la ruta */
         icon: 'perm_identity',
-        children: [{ path: '', component: () => import('components/MainPageComponent.vue') }], /**rutas secundarias */
     },
     {
-        path: '/Register',
-        component: () => import('layouts/MainLayout.vue'),
+        path: '/register',
+        component: () => import('components/FormComponent.vue'),
         title: 'Register',
         icon: 'calendar_today',
-        children: [{ path: '', component: () => import('components/FormComponent.vue') }],
     },
     {
-        path: '/Login',
-        component: () => import('layouts/MainLayout.vue'),
+        path: '/login',
+        component: () => import('src/components/LoginComponent.vue'),
         title: 'Login',
         icon: 'account_circle',
-        children: [{ path: '', component: () => import('src/components/LoginComponent.vue') }],
     },
     {
-        path: '/paciente/id', 
+        path: '/paciente/:id', 
         component: () => import('src/components/PatientComponent.vue'),
     },
     {
@@ -47,7 +44,7 @@ const routes: routeElement[] = [
         component: () => import('components/SupervisorComponent.vue')
     },
     {
-        path: '/admin/id',
+        path: '/admin/:id',
         component: () => import('components/AdminComponent.vue')
     },
     // Always leave this as last one,
