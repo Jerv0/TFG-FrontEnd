@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-
-//Esto lo hago para quitar la ultima posicion y que no salga la ruta de /:catchAll(.*)*
-//routes.pop();
 const TITLE = <string>process.env.APP_TITLE;
 const leftDrawerOpen = ref<boolean>(false); //CAMBIAR A FALSE UNA VEZ TERMINADO DE ARREGLAR ESTA PARTE
 
@@ -38,12 +35,15 @@ const props = defineProps<{
         </q-img>
 
         <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
-        <!-- MENU PARA ADMIN O LO QUE SEA -->
+            <!-- MENU PARA ADMIN O LO QUE SEA -->
             <q-list padding v-if="props.ver === 'admin'">
                 <!-- Aqui tiene que cambiar el 1 por el propio perfil del admin -->
                 <q-item-label header> Informacion </q-item-label>
                 <q-item clickable v-ripple to="/admin/1" active-class="my-menu-link"><q-item-section> Inicio </q-item-section> </q-item>
-                <q-item clickable v-ripple to="/paciente/1" active-class="my-menu-link"><q-item-section> Perfil </q-item-section> </q-item>
+                <q-item clickable v-ripple to="" active-class="my-menu-link"><q-item-section> Perfil </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/candidatos/ver" active-class="my-menu-link"><q-item-section> Candidatos </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/paciente/ver" active-class="my-menu-link"><q-item-section> Paciente </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/cuidadores/ver" active-class="my-menu-link"><q-item-section> Cuidadores </q-item-section> </q-item>
                 <!-- <q-item v-for="(route, index) in routes" :key="index" clickable v-ripple :to="route.path" active-class="my-menu-link">
                     <q-item-section avatar>
                         <q-icon :name="route.icon" />
