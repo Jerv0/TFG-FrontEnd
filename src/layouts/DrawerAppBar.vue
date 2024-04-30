@@ -42,7 +42,7 @@ const props = defineProps<{
                 <q-item clickable v-ripple to="/admin/1" active-class="my-menu-link"><q-item-section> Inicio </q-item-section> </q-item>
                 <q-item clickable v-ripple to="" active-class="my-menu-link"><q-item-section> Perfil </q-item-section> </q-item>
                 <q-item clickable v-ripple to="/candidatos/ver" active-class="my-menu-link"><q-item-section> Candidatos </q-item-section> </q-item>
-                <q-item clickable v-ripple to="/paciente/ver" active-class="my-menu-link"><q-item-section> Paciente </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/pacientes/ver" active-class="my-menu-link"><q-item-section> Pacientes </q-item-section> </q-item>
                 <q-item clickable v-ripple to="/cuidadores/ver" active-class="my-menu-link"><q-item-section> Cuidadores </q-item-section> </q-item>
                 <!-- <q-item v-for="(route, index) in routes" :key="index" clickable v-ripple :to="route.path" active-class="my-menu-link">
                     <q-item-section avatar>
