@@ -34,7 +34,7 @@ const Login = () => {
         <q-input filled type="email" v-model="email" label="Email *" />
         <q-input type="password" v-model="password" label=" Password *" />
         <q-btn align="between" class="btn-fixed-width" color="accent" label="Iniciar sesión" @click="Login"/>
-        <q-btn align="between" class="btn-fixed-width" color="accent" label="Cancelar" to="/"/>
+        <q-btn align="between" class="btn-fixed-width" color="accent" label="Cancelar" to="/"/> 
     </div>
 </template>
 

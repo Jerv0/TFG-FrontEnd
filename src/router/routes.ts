@@ -17,10 +17,9 @@ interface routeElement {
 const routes: routeElement[] = [
     {
         path: '/',
-        component: () => import('layouts/MainLayout.vue'),
+        component: () => import('components/MainPageComponent.vue'),
         title: 'Main', /**titulo de la ruta */
         icon: 'perm_identity',
-        children: [{ path: '', component: () => import('components/MainPageComponent.vue') }], /**rutas secundarias */
     },
     {
         path: '/Register',

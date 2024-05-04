@@ -13,16 +13,17 @@ defineOptions({
 
 const route = useRoute();
 const profile = route.meta.profile;
+let path = route.fullPath;
 
 </script>
 
 <template>
     <q-layout view="hHh lpR fFf">
-        <q-header elevated class="bg-cyan-8">
-        <q-toolbar>
-          <q-toolbar-title>Perfil de {{ profile }}</q-toolbar-title>
-          <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
-        </q-toolbar>
+      <q-header elevated class="bg-cyan-8">
+            <q-toolbar>
+                <q-toolbar-title>Perfil de {{ profile }}</q-toolbar-title>
+                <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
+            </q-toolbar>
       </q-header>
 
       <q-drawer
@@ -32,8 +33,8 @@ const profile = route.meta.profile;
         :breakpoint="400"
       >
         <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
-          <q-list padding>
-            <q-item clickable v-ripple>
+          <q-list padding >
+            <q-item clickable v-ripple :to="path">
               <q-item-section avatar>
                 <q-icon name="account_circle" />
               </q-item-section>
@@ -81,6 +82,5 @@ const profile = route.meta.profile;
 </template>
 
 <style>
-
 </style>
 

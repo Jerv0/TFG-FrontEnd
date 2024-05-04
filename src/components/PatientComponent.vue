@@ -7,6 +7,21 @@ routes.pop();
 
 let model1 = ref<string>('2024-04-18')
 let model2 = ref<string>('03-21-2024')
+
+const frases = [
+    'Cada día que te enfrentas a este desafío, eres un recordatorio viviente de la fortaleza humana. Estamos contigo en este viaje.',
+    'Tu positividad en medio de la adversidad es una luz brillante. Sigues irradiando esperanza incluso en los momentos más difíciles.',
+    'Tu coraje es un testimonio de tu increíble fuerza interior. Estamos ansiosos por ver cómo floreces después de superar este obstáculo',
+    'En cada día de lucha, encuentras una reserva de valentía que inspira a todos a tu alrededor.',
+    'La primavera sigue al invierno, y en tu viaje, cada día nos acerca más a la renovación. Pronto florecerás en una nueva etapa de vida.',
+    'La resiliencia es tu superpoder. Sigues adelante con gracia y valentía, y eso te llevará a la victoria.',
+    'Cada pequeño paso hacia adelante es una victoria sobre la enfermedad. Estás construyendo tu camino hacia la salud día a día.',
+]
+
+const indiceAleatorio = Math.floor(Math.random() * frases.length);
+const elementoAleatorio = frases[indiceAleatorio];
+const tab = ref<string>('mails');
+
 </script>
 
 <template>
@@ -37,10 +52,35 @@ let model2 = ref<string>('03-21-2024')
                         </div>
                         <q-date v-model="model2" mask="MM-DD-YYYY" />
                     </div>
+                    <!--card con frase-->
+                    <q-card flat bordered class="bg-cyan-8" style="max-width: 500px; color: white; height: 150px; position: absolute; top: 0; right: 0;">
+                        <q-card-section> 
+                            <div class="text-h6"><q-icon name="star"/> Recuerda: </div> 
+                        </q-card-section>
+                        <q-card-section>
+                        {{elementoAleatorio}}
+                        </q-card-section>
+                    </q-card>
+                    
                 </div>
+              
             </div>
+            <div id="tab" class="q-gutter-y-md" style="max-width: 600px">
+                    <q-tabs
+                        v-model="tab"
+                        inline-label
+                        class="bg-purple text-white shadow-2"
+                    >
+                        <q-tab name="calendar" icon="calendar_today" label="Calendario" />
+                        <q-tab name="recordatorio" icon="alarm" label="Citas" />
+                    </q-tabs>
+            </div>
+           <!--  <div class=" q-mb-md q-mr-md">
+                <q-btn class="glossy" round color="deep-orange" icon="chat" />
+            </div> --> 
         </q-page-container>
     </q-layout>
+   
 </template>
 
 <style scoped>
