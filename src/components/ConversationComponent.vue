@@ -3,54 +3,55 @@
 </script>
 
 <template>
-     <div class="q-pa-md row justify-center">
-    <div style="width: 100%; max-width: 400px">
-      <q-chat-message
-        :text="['Have you seen Quasar?']"
-        sent
-        text-color="white"
-        bg-color="primary"
-      >
-        <template v-slot:name>me</template>
-        <template v-slot:stamp>7 minutes ago</template>
-        <template v-slot:avatar>
-          <img
-            class="q-message-avatar q-message-avatar--sent"
-            src="https://cdn.quasar.dev/img/avatar4.jpg"
-          >
-        </template>
-      </q-chat-message>
+   <div class="q-pa-md q-gutter-md">
+    <q-list bordered class="rounded-borders" style="max-width: 350px">
+      <q-item-label header>Friends</q-item-label>
 
-      <q-chat-message
-        bg-color="amber"
-      >
-        <template v-slot:name>Mary</template>
-        <template v-slot:avatar>
-          <img
-            class="q-message-avatar q-message-avatar--received"
-            src="https://cdn.quasar.dev/img/avatar2.jpg"
-          >
-        </template>
+      <q-item clickable v-ripple>
+        <q-item-section avatar>
+          <q-avatar>
+            <img src="https://cdn.quasar.dev/img/avatar2.jpg">
+          </q-avatar>
+        </q-item-section>
 
-        <div>
-          Already building an app with it...
-          <img src="https://cdn.quasar.dev/img/discord-qeart.png" class="my-emoji">
-        </div>
+        <q-item-section>
+          <q-item-label lines="1">Brunch this weekend?</q-item-label>
+          <q-item-label caption lines="2">
+            <span class="text-weight-bold">Janet</span>
+            -- I'll be in your neighborhood doing errands this
+            weekend. Do you want to grab brunch?
+          </q-item-label>
+        </q-item-section>
 
-        <q-spinner-dots size="2rem" />
-      </q-chat-message>
-      <q-btn align="between" class="btn-fixed-width" color="accent" label="Volver" to="/paciente/id" />
-      
+        <q-item-section side top>
+          1 min ago
+        </q-item-section>
+      </q-item>
+
+      <q-separator inset="item" />
+
+      <q-item clickable v-ripple>
+        <q-item-section avatar>
+          <q-avatar>
+            <img src="https://cdn.quasar.dev/img/avatar4.jpg">
+          </q-avatar>
+        </q-item-section>
+
+        <q-item-section>
+          <q-item-label lines="1">Linear Project</q-item-label>
+          <q-item-label caption lines="2">
+            <span class="text-weight-bold">John</span>
+            -- Can we schedule a call for tomorrow?
+          </q-item-label>
+        </q-item-section>
+
+        <q-item-section side top>
+          1 min ago
+        </q-item-section>
+      </q-item>
+    </q-list>
     </div>
-  </div>
-  
-
 </template>
 
 <style scoped>
-.my-emoji {
-    vertical-align: middle;
-    height: 2em;
-    width: 2em;
-}
 </style>

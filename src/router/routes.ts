@@ -1,12 +1,14 @@
 import { Component } from 'vue';
 
 /**representa la estructura de cada elemento de la ruta */
+
 interface routeElement {
     path: string;
     component: () => Component;
     title?: string;
     icon?: string;
     children?: [{ path: string; component: () => Component }];
+    meta?: { [key: string]: string }; 
 }
 
 //https://m2.material.io/icons/ de aqui saco iconos
@@ -35,20 +37,34 @@ const routes: routeElement[] = [
         children: [{ path: '', component: () => import('src/components/LoginComponent.vue') }],
     },
     {
-        path: '/paciente/id', 
-        component: () => import('src/components/PatientComponent.vue'),
+        path: '/paciente/id',
+        component: () => import ('layouts/ProfileLayout.vue'), 
+        meta: {
+            profile: 'Paciente' // Establece el perfil como metadato
+        },
+        children: [{ path: '', component: () => import('src/components/PatientComponent.vue') }],
     },
     {
         path: '/conversacion/id',
-        component: () => import('components/ConversationComponent.vue')
+        component: () => import('components/ConversationComponent.vue'),
+        title: 'Chat',
+        icon: 'chat'
     },
     {
         path: '/supervisor/id',
-        component: () => import('components/SupervisorComponent.vue')
+        component: () => import('layouts/ProfileLayout.vue'),
+        meta: {
+            profile: 'Supervisor'
+        }, 
+        children: [{ path: '', component: () => import ('src/components/SupervisorComponent.vue')}]
     },
     {
         path: '/admin/id',
-        component: () => import('components/AdminComponent.vue')
+        component: () => import('layouts/ProfileLayout.vue'),
+        meta: {
+            profile: 'Administrador'
+        },
+        children: [{ path: '', component: () => import ('src/components/AdminComponent.vue')}]
     },
     // Always leave this as last one,
     // but you can also remove it
