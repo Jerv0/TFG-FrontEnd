@@ -1,31 +1,35 @@
 <script setup lang="ts">
 // IMPORTS
 import { ref } from 'vue';
-import FormCuidadorComponent from './FormComponent.vue';
-
+import { uid } from 'quasar';
+import { store } from '../store/store';
+import DrawerAppBar from '../layouts/DrawerAppBar.vue';
 //VARIABLES GLOBALES
 const CUIDADOR = process.env.CUIDADOR;
-const PERSONA = process.env.PERSONA;
+const PACIENTE = process.env.PACIENTE;
+
 //VARIABLES DEL COMPONENTE
-const showForm = ref<boolean>(true); //CAMBIAR A FALSE PARA QUE NO SALGA EL FORMULARIO CARGADO
-const type = ref<string>('');
+const showForm = ref<boolean>(false);
+const id = ref<string>(uid());
 
 //METODOS
 const openForm = (typeP: string) => {
-    type.value = typeP;
+    store.type = typeP;
     showForm.value = true;
-};
-
-const closeForm = () => {
-    showForm.value = false;
 };
 </script>
 
 <template>
-    <FormCuidadorComponent v-if="showForm" :showForm="showForm" :type="type" @closeForm="closeForm" />
-    <q-btn align="between" class="btn-fixed-width" color="accent" label="Cuidador" icon="" @click="openForm(CUIDADOR)" />
-    <q-btn align="between" class="btn-fixed-width" color="accent" label="Persona" icon="" @click="openForm(PERSONA)" />
-    {{ showForm }}
+    <q-layout view="hHh lpR fFf">
+        <q-page-container>
+            <DrawerAppBar ver="" />
+            <q-btn align="between" class="btn-fixed-width" color="accent" label="Ya tengo cuenta" icon="" to="/Login" />
+            <h3>Bienvenido a nuestra página web</h3>
+            <p>{{ id }}</p>
+            <q-btn align="between" class="btn-fixed-width" color="accent" label="Soy supervisor" icon="" @click="openForm(CUIDADOR)" to="/Register" />
+            <q-btn align="between" class="btn-fixed-width" color="accent" label="Soy paciente" icon="" @click="openForm(PACIENTE)" to="/Register" />
+        </q-page-container>
+    </q-layout>
 </template>
 
 <style></style>

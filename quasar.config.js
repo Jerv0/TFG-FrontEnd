@@ -10,6 +10,9 @@
 
 const { configure } = require('quasar/wrappers');
 
+//https://quasar.dev/style/theme-builder/
+const { brand } = require('./assets/colorPalette.json');
+
 module.exports = configure(function (/* ctx */) {
     return {
         // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
@@ -44,7 +47,7 @@ module.exports = configure(function (/* ctx */) {
                 node: 'node20',
             },
 
-            vueRouterMode: 'hash', // available values: 'hash', 'history'
+            vueRouterMode: 'history', // available values: 'hash', 'history'
             // vueRouterBase,
             // vueDevtools,
             // vueOptionsAPI: false,
@@ -87,9 +90,10 @@ module.exports = configure(function (/* ctx */) {
 
         // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
         framework: {
-            plugins: ['Notify'],
+            plugins: ['Notify', 'Dialog'],
 
             config: {
+                brand, // Cambiar para que lo recoja de otro archivo y sea mas modularizable
                 // optional (v0.17+)
                 notify: {
                     // Notify defaults

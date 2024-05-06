@@ -1,18 +1,47 @@
-import { RouteRecordRaw } from 'vue-router';
 
-const routes: RouteRecordRaw[] = [
-  {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('components/MainPageComponent.vue') }],
-  },
+/**representa la estructura de cada elemento de la ruta */
+//https://m2.material.io/icons/ de aqui saco iconos
 
-  // Always leave this as last one,
-  // but you can also remove it
-  {
-    path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
-  },
+/**todas las rutas de la aplicación: */
+const routes= [
+    {
+        path: '/',
+        component: () => import('components/MainPageComponent.vue'),
+    },
+    {
+        path: '/register',
+        component: () => import('components/FormComponent.vue'),
+    },
+    {
+        path: '/login',
+        component: () => import('src/components/LoginComponent.vue'),
+    },
+    {
+        path: '/paciente/:id', 
+        component: () => import('src/components/PatientComponent.vue'),
+    },
+    {
+        path: '/conversacion/id',
+        component: () => import('components/ConversationComponent.vue')
+    },
+    {
+        path: '/supervisor/id',
+        component: () => import('components/SupervisorComponent.vue')
+    },
+    {
+        path: '/admin/:id',
+        component: () => import('components/AdminComponent.vue')
+    },
+    {
+        path: '/:tipo(\\w+)/ver',
+        component: () => import('layouts/ViewList.vue')
+    },
+    // Always leave this as last one,
+    // but you can also remove it
+    {
+        path: '/:catchAll(.*)*',
+        component: () => import('pages/ErrorNotFound.vue'),
+    },
 ];
 
 export default routes;
