@@ -1,3 +1,4 @@
+<!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
 const columns = [
     {
@@ -5,8 +6,8 @@ const columns = [
         required: true,
         label: 'Dessert (100g serving)',
         align: 'left',
-        field: (row: { name: any }) => row.name,
-        format: (val: any) => `${val}`,
+        field: (row: { name: unknown }) => row.name,
+        format: (val: unknown) => `${val}`,
         sortable: true,
     },
     { name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true },
@@ -41,6 +42,6 @@ const initialPagination = {
 </script>
 <template>
     <div class="q-pa-md">
-        <q-table flat bordered title="props.table" :rows="rows" :columns="columns" row-key="name" :pagination="initialPagination" />
+        
     </div>
 </template>

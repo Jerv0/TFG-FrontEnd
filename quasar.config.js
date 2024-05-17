@@ -98,6 +98,7 @@ module.exports = configure(function (/* ctx */) {
                 notify: {
                     // Notify defaults
                 },
+                dark: 'auto',
             },
         },
 

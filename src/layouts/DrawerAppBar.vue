@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import DarkModeComponent from '../components/DarkModeComponent.vue';
 const TITLE = <string>process.env.APP_TITLE;
 const leftDrawerOpen = ref<boolean>(false); //CAMBIAR A FALSE UNA VEZ TERMINADO DE ARREGLAR ESTA PARTE
 
@@ -18,6 +19,7 @@ const props = defineProps<{
     <q-header elevated>
         <q-toolbar>
             <q-toolbar-title> {{ TITLE }} </q-toolbar-title>
+            <DarkModeComponent />
             <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
         </q-toolbar>
     </q-header>

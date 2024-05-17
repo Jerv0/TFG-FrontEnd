@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useQuasar } from 'quasar';
+const $q = useQuasar();
 
 interface Contact {
     id: number;
@@ -9,7 +11,7 @@ interface Contact {
 
 const isChatVisible = ref(true);
 const contacts = ref<Contact[]>([
-    { id: 1, name: 'John Doe', messages: ['Have you seen Quasar?'] },
+    { id: 1, name: 'John Doe', messages: ['Have you seen Quasar?', 'holaaa'] },
     { id: 2, name: 'Jane Smith', messages: ['Already building an app with it...'] },
     // Otros contactos...
 ]);
@@ -27,11 +29,11 @@ const openConversation = (contact: Contact) => {
     <!-- Boton encargado de abrir o cerrar el modal , posicionar donde se quiera -->
     <q-btn align="between" class="btn-fixed-width" color="accent" label="Chat" @click="toggleChat" />
 
-    <div v-if="isChatVisible" class="q-pa-md row justify-center absolute-bottom-right container">
+    <div v-if="isChatVisible" class="q-pa-md row justify-center absolute-bottom-right container" :class="{ 'container-dark': $q.dark.isActive }">
         <!-- Lista de contactos -->
         <div class="row justify-end">
-                <q-btn class="btn-fixed-width static" color="accent" label="x" @click="toggleChat" />
-            </div>
+            <q-btn class="btn-fixed-width static" color="accent" label="x" @click="toggleChat" />
+        </div>
         <div class="col-3 loop float-left">
             <q-list>
                 <q-item v-for="contact in contacts" :key="contact.id" clickable @click="openConversation(contact)" class="contact">
@@ -44,7 +46,6 @@ const openConversation = (contact: Contact) => {
 
         <!-- Contenido de la conversación seleccionada -->
         <div v-if="selectedContact" class="col chat q-gutter-x-md">
-
             <q-chat-message v-for="(message, index) in selectedContact.messages" :key="index" :text="[message]" :sent="index % 2 === 0" text-color="white" bg-color="primary" class="q-mb-sm">
                 <template v-slot:name>me</template>
                 <template v-slot:stamp>7 minutes ago</template>
@@ -126,6 +127,9 @@ const openConversation = (contact: Contact) => {
     border: 1px solid #ccc;
     border-radius: 5px;
     z-index: 9999;
+}
+.container-dark {
+    background-color: #1d1d1d;
 }
 .chat {
     height: 100%;
