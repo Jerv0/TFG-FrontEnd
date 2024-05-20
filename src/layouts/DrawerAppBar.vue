@@ -43,9 +43,9 @@ const props = defineProps<{
                 <q-item-label header> Informacion </q-item-label>
                 <q-item clickable v-ripple to="/admin/1" active-class="my-menu-link"><q-item-section> Inicio </q-item-section> </q-item>
                 <q-item clickable v-ripple to="" active-class="my-menu-link"><q-item-section> Perfil </q-item-section> </q-item>
-                <q-item clickable v-ripple to="/candidatos/ver" active-class="my-menu-link"><q-item-section> Candidatos </q-item-section> </q-item>
-                <q-item clickable v-ripple to="/pacientes/ver" active-class="my-menu-link"><q-item-section> Pacientes </q-item-section> </q-item>
-                <q-item clickable v-ripple to="/cuidadores/ver" active-class="my-menu-link"><q-item-section> Cuidadores </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/ver/candidato" active-class="my-menu-link"><q-item-section> Candidatos </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/ver/paciente" active-class="my-menu-link"><q-item-section> Pacientes </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/ver/supervisor" active-class="my-menu-link"><q-item-section> Supervisor </q-item-section> </q-item>
                 <!-- <q-item v-for="(route, index) in routes" :key="index" clickable v-ripple :to="route.path" active-class="my-menu-link">
                     <q-item-section avatar>
                         <q-icon :name="route.icon" />

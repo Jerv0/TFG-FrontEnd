@@ -33,7 +33,7 @@ const routes= [
         component: () => import('components/AdminComponent.vue')
     },
     {
-        path: '/:tipo(\\w+)/ver',
+        path: '/ver/:tipo(\\w+)',
         component: () => import('layouts/ViewList.vue')
     },
     // Always leave this as last one,

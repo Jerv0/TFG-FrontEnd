@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
 import { useQuasar } from 'quasar';
+import { io, Socket } from 'socket.io-client';
+
 const $q = useQuasar();
 
 interface Contact {
@@ -17,6 +19,15 @@ const contacts = ref<Contact[]>([
 ]);
 
 const selectedContact = ref<Contact | null>(null);
+const newMessage = ref<string>('');
+
+const socket: Socket = io('http://18.214.47.239:3000', {
+    withCredentials: true,
+    extraHeaders: {
+        'Access-Control-Allow-Origin': 'http://18.214.47.239:9000', // El mismo origen permitido que en el servidor
+    },
+});
+const messagesContainer = ref<HTMLElement | null>(null);
 
 const toggleChat = () => (isChatVisible.value = !isChatVisible.value);
 
@@ -24,13 +35,49 @@ const openConversation = (contact: Contact) => {
     selectedContact.value = contact;
     console.log('Abriendo conversación con:', contact.name);
 };
+
+const sendMessage = async () => {
+    if (newMessage.value.trim() !== '' && selectedContact.value) {
+        const message = newMessage.value;
+        socket.emit('chat message', message);
+        selectedContact.value.messages.push(message);
+        newMessage.value = '';
+        await nextTick();
+        scrollToBottom();
+    }
+};
+
+const scrollToBottom = () => {
+    if (messagesContainer.value) {
+        messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+    }
+};
+
+onMounted(() => {
+    socket.on('chat message', async (msg: string) => {
+        if (selectedContact.value) {
+            selectedContact.value.messages.push(msg);
+            await nextTick();
+            scrollToBottom();
+        }
+    });
+});
+
+onBeforeUnmount(() => {
+    console.log('me cierro');
+    socket.disconnect();
+});
+
+watch(selectedContact, async () => {
+    await nextTick();
+    scrollToBottom();
+});
 </script>
+
 <template>
-    <!-- Boton encargado de abrir o cerrar el modal , posicionar donde se quiera -->
     <q-btn align="between" class="btn-fixed-width" color="accent" label="Chat" @click="toggleChat" />
 
     <div v-if="isChatVisible" class="q-pa-md row justify-center absolute-bottom-right container" :class="{ 'container-dark': $q.dark.isActive }">
-        <!-- Lista de contactos -->
         <div class="row justify-end">
             <q-btn class="btn-fixed-width static" color="accent" label="x" @click="toggleChat" />
         </div>
@@ -44,57 +91,21 @@ const openConversation = (contact: Contact) => {
             </q-list>
         </div>
 
-        <!-- Contenido de la conversación seleccionada -->
         <div v-if="selectedContact" class="col chat q-gutter-x-md">
-            <q-chat-message v-for="(message, index) in selectedContact.messages" :key="index" :text="[message]" :sent="index % 2 === 0" text-color="white" bg-color="primary" class="q-mb-sm">
-                <template v-slot:name>me</template>
-                <template v-slot:stamp>7 minutes ago</template>
-                <template v-slot:avatar>
-                    <img class="q-message-avatar q-message-avatar--sent" src="https://cdn.quasar.dev/img/avatar4.jpg" />
-                </template>
-            </q-chat-message>
-            <q-chat-message v-for="(message, index) in selectedContact.messages" :key="index" :text="[message]" :sent="index % 2 === 0" text-color="white" bg-color="primary" class="q-mb-sm">
-                <template v-slot:name>me</template>
-                <template v-slot:stamp>7 minutes ago</template>
-                <template v-slot:avatar>
-                    <img class="q-message-avatar q-message-avatar--sent" src="https://cdn.quasar.dev/img/avatar4.jpg" />
-                </template>
-            </q-chat-message>
-            <q-chat-message v-for="(message, index) in selectedContact.messages" :key="index" :text="[message]" :sent="index % 2 === 0" text-color="white" bg-color="primary" class="q-mb-sm">
-                <template v-slot:name>me</template>
-                <template v-slot:stamp>7 minutes ago</template>
-                <template v-slot:avatar>
-                    <img class="q-message-avatar q-message-avatar--sent" src="https://cdn.quasar.dev/img/avatar4.jpg" />
-                </template>
-            </q-chat-message>
-            <q-chat-message v-for="(message, index) in selectedContact.messages" :key="index" :text="[message]" :sent="index % 2 === 0" text-color="white" bg-color="primary" class="q-mb-sm">
-                <template v-slot:name>me</template>
-                <template v-slot:stamp>7 minutes ago</template>
-                <template v-slot:avatar>
-                    <img class="q-message-avatar q-message-avatar--sent" src="https://cdn.quasar.dev/img/avatar4.jpg" />
-                </template>
-            </q-chat-message>
-            <q-chat-message v-for="(message, index) in selectedContact.messages" :key="index" :text="[message]" :sent="index % 2 === 0" text-color="white" bg-color="primary" class="q-mb-sm">
-                <template v-slot:name>me</template>
-                <template v-slot:stamp>7 minutes ago</template>
-                <template v-slot:avatar>
-                    <img class="q-message-avatar q-message-avatar--sent" src="https://cdn.quasar.dev/img/avatar4.jpg" />
-                </template>
-            </q-chat-message>
-            <q-chat-message v-for="(message, index) in selectedContact.messages" :key="index" :text="[message]" :sent="index % 2 === 0" text-color="white" bg-color="primary" class="q-mb-sm">
-                <template v-slot:name>me</template>
-                <template v-slot:stamp>7 minutes ago</template>
-                <template v-slot:avatar>
-                    <img class="q-message-avatar q-message-avatar--sent" src="https://cdn.quasar.dev/img/avatar4.jpg" />
-                </template>
-            </q-chat-message>
-            <q-chat-message v-for="(message, index) in selectedContact.messages" :key="index" :text="[message]" :sent="index % 2 === 0" text-color="white" bg-color="primary" class="q-mb-sm">
-                <template v-slot:name>me</template>
-                <template v-slot:stamp>7 minutes ago</template>
-                <template v-slot:avatar>
-                    <img class="q-message-avatar q-message-avatar--sent" src="https://cdn.quasar.dev/img/avatar5.jpg" />
-                </template>
-            </q-chat-message>
+            <div ref="messagesContainer" class="messages-container">
+                <q-chat-message v-for="(message, index) in selectedContact.messages" :key="index" :text="[message]" :sent="index % 2 === 0" text-color="white" bg-color="primary" class="q-mb-sm">
+                    <template v-slot:name>me</template>
+                    <template v-slot:stamp>7 minutes ago</template>
+                    <template v-slot:avatar>
+                        <img class="q-message-avatar q-message-avatar--sent" src="https://cdn.quasar.dev/img/avatar4.jpg" />
+                    </template>
+                </q-chat-message>
+            </div>
+
+            <div class="input-container">
+                <q-input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Escribe un mensaje..." />
+                <q-btn color="primary" @click="sendMessage">Enviar</q-btn>
+            </div>
         </div>
     </div>
 </template>
@@ -123,10 +134,6 @@ const openConversation = (contact: Contact) => {
     z-index: 9999;
     display: flex;
     background-color: white;
-    width: 450px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    z-index: 9999;
 }
 .container-dark {
     background-color: #1d1d1d;
@@ -134,8 +141,25 @@ const openConversation = (contact: Contact) => {
 .chat {
     height: 100%;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 .contact {
     border-bottom: 1px solid #ccc;
+}
+.messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 60px; /* Altura del input-container */
+}
+.input-container {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: #f9f9f9;
+    border-top: 1px solid #ccc;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
 }
 </style>

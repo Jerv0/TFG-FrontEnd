@@ -2,13 +2,13 @@
 import CardComponent from './CardComponent.vue';
 import DrawerAppBar from '../layouts/DrawerAppBar.vue';
 import ChatComponent from './ChatComponent.vue';
-
-
+const prueba = import.meta.env.VITE_PRUEBA;
 </script>
 
 <template>
     <q-layout view="hHh lpR fFf">
         <q-page-container>
+            {{ prueba }}
             <DrawerAppBar ver="admin" />
             <ChatComponent />
             <div class="row">
