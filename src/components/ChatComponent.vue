@@ -8,13 +8,24 @@ const $q = useQuasar();
 interface Contact {
     id: number;
     name: string;
-    messages: string[];
+    messages: Message[];
 }
 
+
+interface Message {
+    id: string, text: string, sender: string
+}
 const isChatVisible = ref(true);
 const contacts = ref<Contact[]>([
-    { id: 1, name: 'John Doe', messages: ['Have you seen Quasar?', 'holaaa'] },
-    { id: 2, name: 'Jane Smith', messages: ['Already building an app with it...'] },
+    {
+        id: 1,
+        name: 'John Doe',
+        messages: [
+            { id: '1', text: 'Have you seen Quasar?', sender: 'other' },
+            { id: '2', text: 'holaaa', sender: 'other' },
+        ],
+    },
+    { id: 2, name: 'Jane Smith', messages: [{ id: '3', text: 'Already building an app with it...', sender: 'other' }] },
     // Otros contactos...
 ]);
 
@@ -36,9 +47,14 @@ const openConversation = (contact: Contact) => {
     console.log('Abriendo conversación con:', contact.name);
 };
 
+const generateMessageId = () => {
+    return Math.random().toString(36).substr(2, 9);
+};
+
 const sendMessage = async () => {
     if (newMessage.value.trim() !== '' && selectedContact.value) {
-        const message = newMessage.value;
+        const messageId = generateMessageId();
+        const message : Message = { id: messageId, text: newMessage.value, sender: 'me' };
         socket.emit('chat message', message);
         selectedContact.value.messages.push(message);
         newMessage.value = '';
@@ -54,9 +70,9 @@ const scrollToBottom = () => {
 };
 
 onMounted(() => {
-    socket.on('chat message', async (msg: string) => {
-        if (selectedContact.value) {
-            selectedContact.value.messages.push(msg);
+    socket.on('chat message', async (msg: { id: string; text: string; sender: 'me' | 'other' }) => {
+        if (selectedContact.value && !selectedContact.value.messages.find((m) => m.id === msg.id)) {
+            selectedContact.value.messages.push({ ...msg, sender: 'other' });
             await nextTick();
             scrollToBottom();
         }
@@ -93,11 +109,12 @@ watch(selectedContact, async () => {
 
         <div v-if="selectedContact" class="col chat q-gutter-x-md">
             <div ref="messagesContainer" class="messages-container">
-                <q-chat-message v-for="(message, index) in selectedContact.messages" :key="index" :text="[message]" :sent="index % 2 === 0" text-color="white" bg-color="primary" class="q-mb-sm">
-                    <template v-slot:name>me</template>
+                <q-chat-message v-for="message in selectedContact.messages" :key="message.id" :text="[message.text]" :sent="message.sender === 'me'" text-color="white" bg-color="primary" class="q-mb-sm">
+                    <template v-slot:name>{{ message.sender === 'me' ? 'me' : selectedContact.name }}</template>
                     <template v-slot:stamp>7 minutes ago</template>
                     <template v-slot:avatar>
-                        <img class="q-message-avatar q-message-avatar--sent" src="https://cdn.quasar.dev/img/avatar4.jpg" />
+                        <img class="q-message-avatar q-message-avatar--sent" src="https://cdn.quasar.dev/img/avatar4.jpg" v-if="message.sender === 'me'" />
+                        <img class="q-message-avatar q-message-avatar--received" src="https://cdn.quasar.dev/img/avatar1.jpg" v-else />
                     </template>
                 </q-chat-message>
             </div>

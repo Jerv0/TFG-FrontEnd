@@ -29,7 +29,7 @@ const routes= [
         component: () => import('components/SupervisorComponent.vue')
     },
     {
-        path: '/admin/:id',
+        path: '/admin/',
         component: () => import('components/AdminComponent.vue')
     },
     {
