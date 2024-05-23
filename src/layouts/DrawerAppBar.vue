@@ -41,8 +41,7 @@ const props = defineProps<{
             <q-list padding v-if="props.ver === 'admin'">
                 <!-- Aqui tiene que cambiar el 1 por el propio perfil del admin -->
                 <q-item-label header> Informacion </q-item-label>
-                <q-item clickable v-ripple to="/admin/1" active-class="my-menu-link"><q-item-section> Inicio </q-item-section> </q-item>
-                <q-item clickable v-ripple to="" active-class="my-menu-link"><q-item-section> Perfil </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/admin" active-class="my-menu-link"><q-item-section> Inicio </q-item-section> </q-item>
                 <q-item clickable v-ripple to="/ver/candidato" active-class="my-menu-link"><q-item-section> Candidatos </q-item-section> </q-item>
                 <q-item clickable v-ripple to="/ver/paciente" active-class="my-menu-link"><q-item-section> Pacientes </q-item-section> </q-item>
                 <q-item clickable v-ripple to="/ver/supervisor" active-class="my-menu-link"><q-item-section> Supervisor </q-item-section> </q-item>

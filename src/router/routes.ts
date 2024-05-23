@@ -1,9 +1,5 @@
-
-/**representa la estructura de cada elemento de la ruta */
-//https://m2.material.io/icons/ de aqui saco iconos
-
-/**todas las rutas de la aplicación: */
-const routes= [
+//Rutas de la aplicacion
+const routes = [
     {
         path: '/',
         component: () => import('components/MainPageComponent.vue'),
@@ -17,24 +13,24 @@ const routes= [
         component: () => import('src/components/LoginComponent.vue'),
     },
     {
-        path: '/paciente/:id', 
+        path: '/paciente/:id',
         component: () => import('src/components/PatientComponent.vue'),
     },
     {
         path: '/conversacion/id',
-        component: () => import('components/ConversationComponent.vue')
+        component: () => import('components/ConversationComponent.vue'),
     },
     {
         path: '/supervisor/id',
-        component: () => import('components/SupervisorComponent.vue')
+        component: () => import('components/SupervisorComponent.vue'),
     },
     {
         path: '/admin/',
-        component: () => import('components/AdminComponent.vue')
+        component: () => import('components/AdminComponent.vue'),
     },
     {
         path: '/ver/:tipo(\\w+)',
-        component: () => import('layouts/ViewList.vue')
+        component: () => import('layouts/ViewList.vue'),
     },
     // Always leave this as last one,
     // but you can also remove it

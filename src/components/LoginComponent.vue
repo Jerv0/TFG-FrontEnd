@@ -21,7 +21,7 @@ const Login = () => {
     } else if (email.value === 'supervisor' && password.value === 'supervisor') {
         router.push('/supervisor/id');
     } else if (email.value === 'admin' && password.value === 'admin') {
-        router.push('/admin/id');
+        router.push('/admin');
     } else {
         alert('email o contraseña incorrectos');
     }

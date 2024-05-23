@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { route } from 'quasar/wrappers';
 import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
 
@@ -24,6 +25,12 @@ export default route(function (/* { store, ssrContext } */) {
         // quasar.conf.js -> build -> publicPath
         history: createHistory(process.env.VUE_ROUTER_BASE),
     });
-
+    //Aqui checkear la autentificacion
+    Router.beforeEach((to, from, next) => {
+        // Aquí puedes añadir tu lógica personalizada
+        console.log('Navegando a:', to.path);
+        console.log('Viniendo de:', from.path);
+        next();
+    });
     return Router;
 });
