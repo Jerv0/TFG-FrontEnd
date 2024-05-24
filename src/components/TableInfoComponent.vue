@@ -22,6 +22,8 @@ const urlCustom = computed(() => {
     return `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/pacienteJavi`;
 });
 
+console.log(urlUsers.value)
+
 const fetchData = async (url: string) => {
     try {
         await new Promise((resolve) => setTimeout(resolve, 300));

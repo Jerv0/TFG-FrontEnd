@@ -1,6 +1,6 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
+import { ref } from 'vue';
 import toast from '../utils/formatNotify';
 import axios from 'axios';
 import { validatePassword, validPassword } from '../utils/funcionesValidar';

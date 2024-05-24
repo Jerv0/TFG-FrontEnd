@@ -1,31 +1,38 @@
 //Rutas de la aplicacion
 const routes = [
     {
+        name: 'home',
         path: '/',
         component: () => import('components/MainPageComponent.vue'),
     },
     {
+        name: 'register',
         path: '/register',
         component: () => import('components/FormComponent.vue'),
     },
     {
+        name: 'login',
         path: '/login',
         component: () => import('src/components/LoginComponent.vue'),
     },
     {
-        path: '/paciente/:id',
+        name: 'paciente',
+        path: '/paciente',
         component: () => import('src/components/PatientComponent.vue'),
     },
     {
-        path: '/conversacion/id',
+        name: 'hola',
+        path: '/conversacion/:id',
         component: () => import('components/ConversationComponent.vue'),
     },
     {
-        path: '/supervisor/id',
+        name: 'supervisor',
+        path: '/supervisor',
         component: () => import('components/SupervisorComponent.vue'),
     },
     {
-        path: '/admin/',
+        name: 'admin',
+        path: '/admin',
         component: () => import('components/AdminComponent.vue'),
     },
     {

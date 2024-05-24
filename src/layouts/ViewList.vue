@@ -13,7 +13,7 @@ const path = computed(() => router.fullPath.split('/')[2]);
 <template>
     <q-layout view="hHh lpR fFf">
         <q-page-container>
-            <DrawerAppBar ver="admin" />
+            <DrawerAppBar />
             <TableInfoComponent :table="path" />
         </q-page-container>
     </q-layout>

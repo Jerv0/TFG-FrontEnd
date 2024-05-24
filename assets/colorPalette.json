@@ -1,15 +1,15 @@
 {
     "brand": {
-        "primary": "#d029e3",
-        "secondary": "#26A69A",
-        "accent": "#9C27B0",
+        "primary": "#FF5722",
+        "secondary": "#607D8B",
+        "accent": "#FF9800",
 
-        "dark": "#1d1d1d",
-        "dark-page": "#121212",
+        "dark": "#2E3A45",
+        "dark-page": "#1C262B",
 
-        "positive": "#21BA45",
-        "negative": "#C10015",
-        "info": "#31CCEC",
-        "warning": "#F2C037"
+        "positive": "#4CAF50",
+        "negative": "#F44336",
+        "info": "#2196F3",
+        "warning": "#fcba03"
     }
 }

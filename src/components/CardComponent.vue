@@ -2,7 +2,7 @@
 const props = defineProps<{
     title: string;
     subtitle: string;
-    count: number;
+    count: unknown;
     color: string;
 }>();
 

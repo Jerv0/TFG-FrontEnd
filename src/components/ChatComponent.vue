@@ -15,7 +15,7 @@ interface Contact {
 interface Message {
     id: string, text: string, sender: string
 }
-const isChatVisible = ref(true);
+const isChatVisible = ref(false);
 const contacts = ref<Contact[]>([
     {
         id: 1,
