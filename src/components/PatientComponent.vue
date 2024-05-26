@@ -9,7 +9,7 @@ let model2 = ref<string>('03-21-2024');
 
 <template>
     <q-layout view="hHh lpR fFf">
-        <DrawerAppBar ver="admin" />
+        <DrawerAppBar />
 
         <q-page-container>
             <div class="q-pa-md">

@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { route } from 'quasar/wrappers';
 import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
 
 import routes from './routes';
-
+import { store } from '../store/store';
+import toast from '../utils/formatNotify';
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
@@ -25,5 +28,25 @@ export default route(function (/* { store, ssrContext } */) {
         history: createHistory(process.env.VUE_ROUTER_BASE),
     });
 
+    //Aqui checkear la autentificacion
+    Router.beforeEach((to, from, next) => {
+        const data: any = store.getCookie('userData');
+        console.log('Navegando a:', to.path);
+        console.log('Viniendo de:', from.path);
+
+        if (to.path === '/admin' && data && data.usertype !== 'admin') {
+            toast('error', 'Ruta restringida');
+            next({ name: 'home' });
+        } else if (to.path.startsWith('/ver')) {
+            if ((data && data.usertype !== 'admin' && to.path !== '/ver/paciente') || to.path !== '/ver/supervisor') {
+                toast('error', 'Ruta restringida');
+                next({ name: 'home' });
+            } else {
+                next();
+            }
+        } else {
+            next();
+        }
+    });
     return Router;
 });

@@ -1,23 +1,28 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
 import { ref } from 'vue';
+import DarkModeComponent from '../components/DarkModeComponent.vue';
+
 const TITLE = <string>process.env.APP_TITLE;
 const leftDrawerOpen = ref<boolean>(false); //CAMBIAR A FALSE UNA VEZ TERMINADO DE ARREGLAR ESTA PARTE
 
+import { store } from '../store/store';
 const toggleLeftDrawer = () => (leftDrawerOpen.value = !leftDrawerOpen.value);
 
 defineOptions({
     name: 'MainLayout',
 });
 
-const props = defineProps<{
-    ver: string;
-}>();
+const prueba: any = store.getCookie('userData') || null;
 </script>
 
 <template>
     <q-header elevated>
         <q-toolbar>
             <q-toolbar-title> {{ TITLE }} </q-toolbar-title>
+            <DarkModeComponent />
+            {{ store }}
+            {{ store.getCookie('userData') }}
             <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
         </q-toolbar>
     </q-header>
@@ -36,14 +41,15 @@ const props = defineProps<{
 
         <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
             <!-- MENU PARA ADMIN O LO QUE SEA -->
-            <q-list padding v-if="props.ver === 'admin'">
+            {{ prueba }}
+            <q-list padding v-if="prueba?.usertype === 'admin'">
                 <!-- Aqui tiene que cambiar el 1 por el propio perfil del admin -->
+
                 <q-item-label header> Informacion </q-item-label>
-                <q-item clickable v-ripple to="/admin/1" active-class="my-menu-link"><q-item-section> Inicio </q-item-section> </q-item>
-                <q-item clickable v-ripple to="" active-class="my-menu-link"><q-item-section> Perfil </q-item-section> </q-item>
-                <q-item clickable v-ripple to="/candidatos/ver" active-class="my-menu-link"><q-item-section> Candidatos </q-item-section> </q-item>
-                <q-item clickable v-ripple to="/pacientes/ver" active-class="my-menu-link"><q-item-section> Pacientes </q-item-section> </q-item>
-                <q-item clickable v-ripple to="/cuidadores/ver" active-class="my-menu-link"><q-item-section> Cuidadores </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/admin" active-class="my-menu-link"><q-item-section> Inicio </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/ver/candidato" active-class="my-menu-link"><q-item-section> Candidatos </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/ver/paciente" active-class="my-menu-link"><q-item-section> Pacientes </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/ver/supervisor" active-class="my-menu-link"><q-item-section> Supervisor </q-item-section> </q-item>
                 <!-- <q-item v-for="(route, index) in routes" :key="index" clickable v-ripple :to="route.path" active-class="my-menu-link">
                     <q-item-section avatar>
                         <q-icon :name="route.icon" />
@@ -52,6 +58,7 @@ const props = defineProps<{
                 </q-item> -->
             </q-list>
             <q-separator spaced />
+            <q-item clickable v-if="store.getCookie('userData')" v-ripple to="/" active-class="my-menu-link" @click="store.removeCookie('userData')"><q-item-section> Cerrar Sesion </q-item-section> </q-item>
         </q-scroll-area>
     </q-drawer>
 </template>

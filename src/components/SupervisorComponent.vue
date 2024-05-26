@@ -5,7 +5,7 @@ import DrawerAppBar from '../layouts/DrawerAppBar.vue';
 <template>
     <q-layout view="hHh lpR fFf">
         <q-page-container>
-            <DrawerAppBar ver="" />
+            <DrawerAppBar />
             <div class="q-pa-md q-gutter-sm" style="height: 80px">
                 <q-avatar v-for="n in 5" :key="n" size="40px" class="overlapping" :style="`left: ${n * 25}px`">
                     <img :src="`https://cdn.quasar.dev/img/avatar${n + 1}.jpg`" />

@@ -1,40 +1,43 @@
-
-/**representa la estructura de cada elemento de la ruta */
-//https://m2.material.io/icons/ de aqui saco iconos
-
-/**todas las rutas de la aplicación: */
-const routes= [
+//Rutas de la aplicacion
+const routes = [
     {
+        name: 'home',
         path: '/',
         component: () => import('components/MainPageComponent.vue'),
     },
     {
+        name: 'register',
         path: '/register',
         component: () => import('components/FormComponent.vue'),
     },
     {
+        name: 'login',
         path: '/login',
         component: () => import('src/components/LoginComponent.vue'),
     },
     {
-        path: '/paciente/:id', 
+        name: 'paciente',
+        path: '/paciente',
         component: () => import('src/components/PatientComponent.vue'),
     },
     {
-        path: '/conversacion/id',
-        component: () => import('components/ConversationComponent.vue')
+        name: 'hola',
+        path: '/conversacion/:id',
+        component: () => import('components/ConversationComponent.vue'),
     },
     {
-        path: '/supervisor/id',
-        component: () => import('components/SupervisorComponent.vue')
+        name: 'supervisor',
+        path: '/supervisor',
+        component: () => import('components/SupervisorComponent.vue'),
     },
     {
-        path: '/admin/:id',
-        component: () => import('components/AdminComponent.vue')
+        name: 'admin',
+        path: '/admin',
+        component: () => import('components/AdminComponent.vue'),
     },
     {
-        path: '/:tipo(\\w+)/ver',
-        component: () => import('layouts/ViewList.vue')
+        path: '/ver/:tipo(\\w+)',
+        component: () => import('layouts/ViewList.vue'),
     },
     // Always leave this as last one,
     // but you can also remove it
