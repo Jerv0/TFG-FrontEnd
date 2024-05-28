@@ -1,12 +1,15 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import toast from '../utils/formatNotify';
-import axios from 'axios';
+import { store } from '../store/store';
 import { uid } from 'quasar';
 import { validateEmail, validateText, validatePassword, validPassword } from '../utils/funcionesValidar';
 const emit = defineEmits(['userUpdated']);
 const passwordConfirm = ref<string>('');
+const supervisorOptions = ref<any[]>([]);
+
 const form = ref({
     username: '',
     pass: '',
@@ -22,6 +25,7 @@ const form = ref({
     especialidad_requerida: '',
     medicamentos: '',
     alergias: '',
+    id_supervisor: { value: '', label: '' },
 
     disponibilidad: '',
     titulacion: '',
@@ -39,7 +43,7 @@ const onSubmit = async () => {
         id: uid(),
         username: form.value.username,
         pass: form.value.pass,
-        mail: form.value.mail,
+        email: form.value.mail,
         dni: form.value.dni,
         nombre: form.value.nombre,
         apellido: form.value.apellido,
@@ -56,6 +60,7 @@ const onSubmit = async () => {
                   especialidad_requerida: form.value.especialidad_requerida,
                   medicamentos: form.value.medicamentos,
                   alergias: form.value.alergias,
+                  id_supervisor: form.value.id_supervisor.value,
               }
             : form.value.usertype === 'supervisor'
             ? {
@@ -69,8 +74,9 @@ const onSubmit = async () => {
     console.log(dataUser);
     console.log(dataCustom);
 
-    await axios.post(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi`, dataUser);
-    await axios.post(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/pacienteJavi`, dataCustom);
+    await store.axiosPost(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi`, dataUser);
+    //Hay que hacer que haga el post al endpoint necesario , ahora mismo solo hace el post a pacientes
+    await store.axiosPost(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/pacienteJavi`, dataCustom);
 
     emit('userUpdated');
     toast('positive', 'Usuario Creado');
@@ -94,12 +100,27 @@ const clearFields = () => {
         especialidad_requerida: '',
         medicamentos: '',
         alergias: '',
+        id_supervisor: { value: '', label: '' },
 
         disponibilidad: '',
         titulacion: '',
         salario: '',
     };
 };
+
+const fetchSupervisors = async () => {
+    try {
+        const response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?usertype=supervisor`);
+        supervisorOptions.value = response.map((user: any) => ({
+            label: user.nombre + ' ' + user.apellido,
+            value: user.id,
+        }));
+    } catch (error) {
+        console.error('Error fetching supervisors:', error);
+    }
+};
+
+onMounted(fetchSupervisors);
 </script>
 
 <template>
@@ -143,6 +164,7 @@ const clearFields = () => {
                             <q-input v-model="form.especialidad_requerida" label="Especialidad Requerida" filled class="col-6" :rules="[(val) => validateText(val) || 'Rellena correctamente']" />
                             <q-input v-model="form.medicamentos" label="Medicamentos" filled class="col-6" :rules="[(val) => validateText(val) || 'Rellena correctamente']" />
                             <q-input v-model="form.alergias" label="Alergias" filled class="col-6" :rules="[(val) => validateText(val) || 'Rellena correctamente']" />
+                            <q-select v-model="form.id_supervisor" :options="supervisorOptions" label="Seleccione un supervisor" filled class="col-6" selected />
                         </div>
                     </div>
 

@@ -1,12 +1,15 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import toast from '../utils/formatNotify';
 import axios from 'axios';
+import { store } from '../store/store';
 import { validatePassword, validPassword } from '../utils/funcionesValidar';
-const passwordConfirm = ref<string>('');
-const emit = defineEmits(['userUpdated']);
 
+
+const emit = defineEmits(['userUpdated']);
+const supervisorOptions = ref<any[]>([]);
 const props = defineProps<{
     row: {
         id: string;
@@ -26,6 +29,7 @@ const props = defineProps<{
         especialidad_requerida: string;
         medicamentos: string;
         alergias: string;
+        id_supervisor: any;
 
         disponibilidad: string;
         titulacion: string;
@@ -36,7 +40,7 @@ const props = defineProps<{
 
 const open = ref(false);
 const form = ref({ ...props.row });
-
+const passwordConfirm = ref<string>(form.value.pass);
 const openModal = () => {
     form.value = { ...props.row };
     open.value = true;
@@ -45,7 +49,6 @@ const openModal = () => {
 const onSubmit = async () => {
     try {
         toast('positive', 'Usuario actualizado');
-        //Formateamos los objetos para hacer los put a las dos tablas
         const dataUser = {
             username: form.value.username,
             pass: form.value.pass,
@@ -66,6 +69,7 @@ const onSubmit = async () => {
                       especialidad_requerida: form.value.especialidad_requerida,
                       medicamentos: form.value.medicamentos,
                       alergias: form.value.alergias,
+                      id_supervisor: form.value.id_supervisor.value,
                   }
                 : props.type === 'supervisor'
                 ? {
@@ -75,17 +79,33 @@ const onSubmit = async () => {
                   }
                 : null;
 
+        //console.log(form.value.id_supervisor.value);
         console.log(dataCustom);
+        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?id="${props.row.id}"`, dataUser);
+        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/pacienteJavi?id="${props.row.id}"`, dataCustom);
 
-        await axios.put(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?id="${props.row.id}"`, dataUser);
-        await axios.put(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/pacienteJavi?id="${props.row.id}"`, dataCustom);
         emit('userUpdated');
-        open.value = false;
+        // open.value = false;
     } catch (e) {
         console.log(e);
     }
 };
+
+const fetchSupervisors = async () => {
+    try {
+        const response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?usertype=supervisor`);
+        supervisorOptions.value = response.map((user: any) => ({
+            label: user.nombre + ' ' + user.apellido,
+            value: user.id,
+        }));
+    } catch (error) {
+        console.error('Error fetching supervisors:', error);
+    }
+};
+
+onMounted(fetchSupervisors);
 </script>
+
 <template>
     <div class="q-pa-md q-gutter-sm">
         <q-btn icon="edit" color="primary" @click="openModal" />
@@ -129,6 +149,7 @@ const onSubmit = async () => {
                             <q-input v-model="form.especialidad_requerida" label="Especialidad Requerida" filled class="col-6" />
                             <q-input v-model="form.medicamentos" label="Medicamentos" filled class="col-6" />
                             <q-input v-model="form.alergias" label="Alergias" filled class="col-6" />
+                            <q-select v-model="form.id_supervisor" :options="supervisorOptions" label="Seleccione un supervisor" filled class="col-6" selected/>
                         </div>
                     </div>
 

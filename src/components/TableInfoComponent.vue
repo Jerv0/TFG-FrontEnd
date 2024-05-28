@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watchEffect, computed } from 'vue';
-import axios from 'axios';
 import { QTableProps } from 'quasar';
 import ModalEdit from './ModalEditUsersComponent.vue';
 import ModalCreate from './ModalCreateUsersComponent.vue';
@@ -9,7 +8,6 @@ import { store } from '../store/store';
 const props = defineProps<{
     table: string;
 }>();
-
 
 const loading = ref(false);
 const data = ref<unknown[]>([]);
@@ -22,24 +20,16 @@ const urlCustom = computed(() => {
     return `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/pacienteJavi`;
 });
 
-console.log(urlUsers.value)
+console.log(urlUsers.value);
+console.log(urlCustom.value);
 
-const fetchData = async (url: string) => {
-    try {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        const response = await axios.get(url);
-        return response.data.usuarios;
-    } catch (error) {
-        throw new Error(`Error al obtener los datos: ${error}`);
-    }
-};
 const loadData = async () => {
     loading.value = true; // Marcamos que se están cargando los datos
     try {
         columns.value = [];
         data.value = [];
-        const dataUsers = await fetchData(urlUsers.value);
-        const dataCustom = await fetchData(urlCustom.value);
+        const dataUsers = await store.axiosGetWithTimeout(urlUsers.value);
+        const dataCustom = await store.axiosGetWithTimeout(urlCustom.value);
 
         const combinedData = [...dataUsers, ...dataCustom];
 
@@ -68,7 +58,7 @@ const loadData = async () => {
 };
 const deleteRow = async (id: string) => {
     try {
-        await axios.delete(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?id="${id}"`);
+        await store.axiosDelete(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?id="${id}"`);
         // Después de eliminar la fila, volvemos a cargar los datos
         toast('negative', 'Usuario eliminado');
         loadData();

@@ -34,11 +34,11 @@ export default route(function (/* { store, ssrContext } */) {
         console.log('Navegando a:', to.path);
         console.log('Viniendo de:', from.path);
 
-        if (to.path === '/admin' && data && data.usertype !== 'admin') {
+        if (to.path === '/admin' && (!data || data.usertype !== 'admin')) {
             toast('error', 'Ruta restringida');
             next({ name: 'home' });
         } else if (to.path.startsWith('/ver')) {
-            if ((data && data.usertype !== 'admin' && to.path !== '/ver/paciente') || to.path !== '/ver/supervisor') {
+            if (!data || (data.usertype !== 'admin' && to.path !== '/ver/paciente' && to.path !== '/ver/supervisor' && to.path !== '/ver/candidatos')) {
                 toast('error', 'Ruta restringida');
                 next({ name: 'home' });
             } else {
@@ -48,5 +48,6 @@ export default route(function (/* { store, ssrContext } */) {
             next();
         }
     });
+
     return Router;
 });

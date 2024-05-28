@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import CardComponent from './CardComponent.vue';
 import DrawerAppBar from '../layouts/DrawerAppBar.vue';
-// import ChatComponent from './ChatComponent.vue';
+import ChatComponent from './ChatComponent.vue';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import logoutButton from './CloseSessionComponent.vue';
@@ -28,7 +28,7 @@ onMounted(() => {
         <q-page-container>
             <q-page class="q-pa-md">
                 <logoutButton class="q-mb-md" />
-                <!-- <ChatComponent /> -->
+                <ChatComponent />
                 <div class="row q-col-gutter-md">
                     <div class="col-12 col-md-6 col-lg-4 q-mb-md">
                         <CardComponent title="Usuarios" subtitle="Total de usuarios" :count="count" color="pink-8" />
