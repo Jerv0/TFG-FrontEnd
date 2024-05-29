@@ -74,9 +74,8 @@ const onSubmit = async () => {
     console.log(dataUser);
     console.log(dataCustom);
 
-    await store.axiosPost(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi`, dataUser);
-    //Hay que hacer que haga el post al endpoint necesario , ahora mismo solo hace el post a pacientes
-    await store.axiosPost(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/pacienteJavi`, dataCustom);
+    await store.axiosPost(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario`, dataUser);
+    await store.axiosPost(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${form.value.usertype}`, dataCustom);
 
     emit('userUpdated');
     toast('positive', 'Usuario Creado');
@@ -110,7 +109,7 @@ const clearFields = () => {
 
 const fetchSupervisors = async () => {
     try {
-        const response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?usertype=supervisor`);
+        const response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&usertype=supervisor`);
         supervisorOptions.value = response.map((user: any) => ({
             label: user.nombre + ' ' + user.apellido,
             value: user.id,

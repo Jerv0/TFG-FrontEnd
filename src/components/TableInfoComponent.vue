@@ -14,10 +14,10 @@ const data = ref<unknown[]>([]);
 const error = ref<string | null>(null);
 const columns = ref<QTableProps['columns']>([]);
 const urlUsers = computed(() => {
-    return `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?usertype=${props.table}`;
+    return `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&usertype=${props.table}`;
 });
 const urlCustom = computed(() => {
-    return `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/pacienteJavi`;
+    return `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${props.table}`;
 });
 
 console.log(urlUsers.value);
@@ -58,7 +58,7 @@ const loadData = async () => {
 };
 const deleteRow = async (id: string) => {
     try {
-        await store.axiosDelete(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?id="${id}"`);
+        await store.axiosDelete(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id="${id}"`);
         // Después de eliminar la fila, volvemos a cargar los datos
         toast('negative', 'Usuario eliminado');
         loadData();

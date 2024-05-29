@@ -7,7 +7,6 @@ import axios from 'axios';
 import { store } from '../store/store';
 import { validatePassword, validPassword } from '../utils/funcionesValidar';
 
-
 const emit = defineEmits(['userUpdated']);
 const supervisorOptions = ref<any[]>([]);
 const props = defineProps<{
@@ -15,7 +14,7 @@ const props = defineProps<{
         id: string;
         username: string;
         pass: string;
-        mail: string;
+        email: string;
         dni: string;
         nombre: string;
         apellido: string;
@@ -48,23 +47,23 @@ const openModal = () => {
 
 const onSubmit = async () => {
     try {
-        toast('positive', 'Usuario actualizado');
         const dataUser = {
+            id: form.value.id,
             username: form.value.username,
             pass: form.value.pass,
-            mail: form.value.mail,
+            email: form.value.email,
             dni: form.value.dni,
             nombre: form.value.nombre,
             apellido: form.value.apellido,
             token: form.value.token,
             dir: form.value.dir,
             tel: form.value.tel,
-            fecha_creacion: form.value.fecha_creacion,
             usertype: form.value.usertype,
         };
         const dataCustom =
             props.type === 'paciente'
                 ? {
+                      id: form.value.id,
                       contact_emerg: form.value.contact_emerg,
                       especialidad_requerida: form.value.especialidad_requerida,
                       medicamentos: form.value.medicamentos,
@@ -73,18 +72,22 @@ const onSubmit = async () => {
                   }
                 : props.type === 'supervisor'
                 ? {
+                      id: form.value.id,
                       disponibilidad: form.value.disponibilidad,
                       titulacion: form.value.titulacion,
                       salario: form.value.salario,
                   }
                 : null;
 
-        //console.log(form.value.id_supervisor.value);
+        console.log(dataUser);
         console.log(dataCustom);
-        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?id="${props.row.id}"`, dataUser);
-        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/pacienteJavi?id="${props.row.id}"`, dataCustom);
-
-        emit('userUpdated');
+        console.log(props.row.id);
+        console.log(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id=${props.row.id}`);
+        console.log(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${props.type}&id=${props.row.id}`);
+        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id=${props.row.id}`, dataUser);
+        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${props.type}&id=${props.row.id}`, dataCustom);
+        toast('positive', 'Usuario actualizado');
+        // emit('userUpdated');
         // open.value = false;
     } catch (e) {
         console.log(e);
@@ -93,7 +96,7 @@ const onSubmit = async () => {
 
 const fetchSupervisors = async () => {
     try {
-        const response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?usertype=supervisor`);
+        const response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&usertype=supervisor`);
         supervisorOptions.value = response.map((user: any) => ({
             label: user.nombre + ' ' + user.apellido,
             value: user.id,
@@ -121,7 +124,7 @@ onMounted(fetchSupervisors);
                         <div class="row q-col-gutter-md">
                             <q-input v-model="form.id" label="ID" disable filled class="col-6" />
                             <q-input v-model="form.username" label="Username" filled class="col-6" />
-                            <q-input v-model="form.mail" label="Email" type="email" filled class="col-6" />
+                            <q-input v-model="form.email" label="Email" type="email" filled class="col-6" />
                             <q-input v-model="form.dni" label="DNI" filled class="col-6" />
                             <q-input v-model="form.nombre" label="Nombre" filled class="col-6" />
                             <q-input v-model="form.apellido" label="Apellido" filled class="col-6" />
@@ -149,7 +152,7 @@ onMounted(fetchSupervisors);
                             <q-input v-model="form.especialidad_requerida" label="Especialidad Requerida" filled class="col-6" />
                             <q-input v-model="form.medicamentos" label="Medicamentos" filled class="col-6" />
                             <q-input v-model="form.alergias" label="Alergias" filled class="col-6" />
-                            <q-select v-model="form.id_supervisor" :options="supervisorOptions" label="Seleccione un supervisor" filled class="col-6" selected/>
+                            <q-select v-model="form.id_supervisor" :options="supervisorOptions" label="Seleccione un supervisor" filled class="col-6" selected />
                         </div>
                     </div>
 

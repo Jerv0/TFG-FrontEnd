@@ -19,7 +19,7 @@ const clearFields = () => {
 
 const login = async () => {
     try {
-        const response = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?email=${email.value}`);
+        const response = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&email=${email.value}`);
 
         if (response.data.usuarios.length > 0 && response.data.usuarios[0].pass === password.value) {
             store.addCookie('userData', response.data.usuarios[0]);
