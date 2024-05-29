@@ -15,6 +15,10 @@ const { brand } = require('./assets/colorPalette.json');
 
 module.exports = configure(function (/* ctx */) {
     return {
+        build: {
+            // ...otras configuraciones...
+            publicPath: '/TFG-Frontend/',
+        },
         // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
         // preFetch: true,
 
