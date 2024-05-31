@@ -17,7 +17,6 @@ module.exports = configure(function (/* ctx */) {
     return {
         build: {
             // ...otras configuraciones...
-            vueRouterMode: 'history',
             publicPath: '/TFG-FrontEnd/',
         },
         // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
@@ -52,7 +51,7 @@ module.exports = configure(function (/* ctx */) {
                 node: 'node20',
             },
 
-            vueRouterMode: 'history', // available values: 'hash', 'history'
+            vueRouterMode: 'hash', // available values: 'hash', 'history'
             // vueRouterBase,
             // vueDevtools,
             // vueOptionsAPI: false,
