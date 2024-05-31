@@ -4,7 +4,6 @@ import DrawerAppBar from '../layouts/DrawerAppBar.vue';
 import ChatComponent from './ChatComponent.vue';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
-import logoutButton from './CloseSessionComponent.vue';
 
 const count = ref<number | null>(null);
 
@@ -27,7 +26,6 @@ onMounted(() => {
         <DrawerAppBar />
         <q-page-container>
             <q-page class="q-pa-md">
-                <logoutButton class="q-mb-md" />
                 <ChatComponent />
                 <div class="row q-col-gutter-md">
                     <div class="col-12 col-md-6 col-lg-4 q-mb-md">
@@ -53,10 +51,10 @@ html.dark-mode {
 body {
     background-color: var(--bg);
     color: var(--color);
-    transition: background-color 0.3s, color 0.3s; /* Transición suave para los cambios de tema */
+    transition: background-color 0.3s, color 0.3s; 
 }
 
-/* Clases de utilidad para bordes redondeados y sombras */
+
 .rounded-borders {
     border-radius: 8px;
 }
@@ -64,8 +62,6 @@ body {
 .shadow-2 {
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
-
-/* Aseguramos que el contenedor de la tarjeta esté bien espaciado y centrado */
 .row {
     display: flex;
     flex-wrap: wrap;

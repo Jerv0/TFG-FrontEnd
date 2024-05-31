@@ -23,6 +23,7 @@ const prueba: any = store.getCookie('userData') || null;
             <DarkModeComponent />
             {{ store }}
             {{ store.getCookie('userData') }}
+            {{ store.getCookie('userDataCustom') }}
             <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
         </q-toolbar>
     </q-header>
@@ -47,7 +48,7 @@ const prueba: any = store.getCookie('userData') || null;
 
                 <q-item-label header> Informacion </q-item-label>
                 <q-item clickable v-ripple to="/admin" active-class="my-menu-link"><q-item-section> Inicio </q-item-section> </q-item>
-                <q-item clickable v-ripple to="/ver/candidato" active-class="my-menu-link"><q-item-section> Candidatos </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/candidaturas" active-class="my-menu-link"><q-item-section> Candidatos </q-item-section> </q-item>
                 <q-item clickable v-ripple to="/ver/paciente" active-class="my-menu-link"><q-item-section> Pacientes </q-item-section> </q-item>
                 <q-item clickable v-ripple to="/ver/supervisor" active-class="my-menu-link"><q-item-section> Supervisor </q-item-section> </q-item>
                 <!-- <q-item v-for="(route, index) in routes" :key="index" clickable v-ripple :to="route.path" active-class="my-menu-link">

@@ -24,6 +24,10 @@ const login = async () => {
         if (response.data.usuarios.length > 0 && response.data.usuarios[0].pass === password.value) {
             store.addCookie('userData', response.data.usuarios[0]);
             const data: any = store.getCookie('userData');
+            if (data.usertype !== 'admin') {
+                const responseType = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${data.usertype}&id=${data.id}`);
+                store.addCookie('userDataCustom', responseType.data.usuarios[0]);
+            }
             router.push(`/${data.usertype}`);
         } else {
             clearFields();

@@ -82,13 +82,11 @@ const onSubmit = async () => {
         console.log(dataUser);
         console.log(dataCustom);
         console.log(props.row.id);
-        console.log(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id=${props.row.id}`);
-        console.log(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${props.type}&id=${props.row.id}`);
         await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id=${props.row.id}`, dataUser);
         await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${props.type}&id=${props.row.id}`, dataCustom);
         toast('positive', 'Usuario actualizado');
-        // emit('userUpdated');
-        // open.value = false;
+        emit('userUpdated');
+        open.value = false;
     } catch (e) {
         console.log(e);
     }
@@ -152,7 +150,7 @@ onMounted(fetchSupervisors);
                             <q-input v-model="form.especialidad_requerida" label="Especialidad Requerida" filled class="col-6" />
                             <q-input v-model="form.medicamentos" label="Medicamentos" filled class="col-6" />
                             <q-input v-model="form.alergias" label="Alergias" filled class="col-6" />
-                            <q-select v-model="form.id_supervisor" :options="supervisorOptions" label="Seleccione un supervisor" filled class="col-6" selected />
+                            <q-select require v-model="form.id_supervisor" :options="supervisorOptions" label="Seleccione un supervisor" filled class="col-6" selected />
                         </div>
                     </div>
 
