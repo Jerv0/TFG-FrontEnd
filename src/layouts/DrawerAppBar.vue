@@ -19,7 +19,7 @@ const prueba: any = store.getCookie('userData') || null;
 <template>
     <q-header elevated>
         <q-toolbar>
-            <q-toolbar-title> {{ TITLE }} </q-toolbar-title>
+            <q-toolbar-title> {{ TITLE  }} </q-toolbar-title>
             <DarkModeComponent />
             {{ store }}
             {{ store.getCookie('userData') }}

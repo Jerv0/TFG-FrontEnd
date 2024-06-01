@@ -18,7 +18,11 @@ const routes = [
     {
         name: 'paciente',
         path: '/paciente',
-        component: () => import('src/components/PatientComponent.vue'),
+        meta: {
+            profile: 'Paciente' // Establece el perfil como metadato
+        },
+        component: () => import ('layouts/ProfileLayout.vue'),
+        children: [{ path: '', component: () => import('src/components/PatientComponent.vue') }]
     },
     {
         name: 'hola',
@@ -27,12 +31,19 @@ const routes = [
     },
     {
         name: 'supervisor',
+        meta: {
+            profile: 'Supervisor'
+        }, 
+        component: () => import('layouts/ProfileLayout.vue'),
         path: '/supervisor',
-        component: () => import('components/SupervisorComponent.vue'),
+        children: [{ path: '', component: () => import ('src/components/SupervisorComponent.vue')}],
     },
     {
         name: 'admin',
         path: '/admin',
+        meta: {
+            profile: 'Administrador'
+        },
         component: () => import('components/AdminComponent.vue'),
     },
     {
