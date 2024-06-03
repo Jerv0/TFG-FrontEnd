@@ -66,7 +66,7 @@ onMounted(() => {
 const getContacts = async () => {
     let response;
     if (data.usertype === 'paciente') {
-        response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id=${dataCustom.id_supervisor}`);
+        response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id_usuario=${dataCustom.id_supervisor}`);
     } else {
         //Para que entre en supervisor y admin y tengan todos los contactos
         response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario`);

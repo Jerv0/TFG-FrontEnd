@@ -22,7 +22,7 @@ const routes = [
             profile: 'Paciente' // Establece el perfil como metadato
         },
         component: () => import ('layouts/ProfileLayout.vue'),
-        children: [{ path: '', component: () => import('src/components/PatientComponent.vue') }]
+        children: [{ path: '/paciente', component: () => import('src/components/PatientComponent.vue') }]
     },
     {
         name: 'hola',
@@ -36,7 +36,7 @@ const routes = [
         }, 
         component: () => import('layouts/ProfileLayout.vue'),
         path: '/supervisor',
-        children: [{ path: '', component: () => import ('src/components/SupervisorComponent.vue')}],
+        children: [{ path: '/supervisor', component: () => import ('src/components/SupervisorComponent.vue')}],
     },
     {
         name: 'admin',

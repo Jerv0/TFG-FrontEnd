@@ -16,6 +16,7 @@
   "dependencies": {
     "@quasar/extras": "^1.16.4",
     "axios": "^1.7.0",
+    "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "pinia": "^2.1.7",

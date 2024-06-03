@@ -14,9 +14,9 @@ routes.pop();
 const drawer = ref<boolean>(false); 
 
 const route = useRoute();
-const profile = route.meta.profile;
+// const profile = route.meta.profile;
 let path = route.fullPath;
-const data: any = store.getCookie('userData');
+let data: any = store.getCookie('userData');
 
 
 </script>
