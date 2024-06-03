@@ -40,12 +40,13 @@ const openModal = () => {
 
 const onSubmit = async () => {
     const dataUser = {
-        id: uid(),
+        id_usuario: uid(),
         username: form.value.username,
         pass: form.value.pass,
         email: form.value.mail,
         dni: form.value.dni,
         nombre: form.value.nombre,
+        token: '',
         apellido: form.value.apellido,
         dir: form.value.dir,
         tel: form.value.tel,
@@ -55,7 +56,7 @@ const onSubmit = async () => {
     const dataCustom =
         form.value.usertype === 'paciente'
             ? {
-                  id: dataUser.id,
+                  id_usuario: dataUser.id_usuario,
                   contact_emerg: form.value.contact_emerg,
                   especialidad_requerida: form.value.especialidad_requerida,
                   medicamentos: form.value.medicamentos,
@@ -64,7 +65,7 @@ const onSubmit = async () => {
               }
             : form.value.usertype === 'supervisor'
             ? {
-                  id: dataUser.id,
+                  id_usuario: dataUser.id_usuario,
                   disponibilidad: form.value.disponibilidad,
                   titulacion: form.value.titulacion,
                   salario: form.value.salario,

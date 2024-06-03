@@ -11,7 +11,7 @@ const emit = defineEmits(['userUpdated']);
 const supervisorOptions = ref<any[]>([]);
 const props = defineProps<{
     row: {
-        id: string;
+        id_usuario: string;
         username: string;
         pass: string;
         email: string;
@@ -48,7 +48,7 @@ const openModal = () => {
 const onSubmit = async () => {
     try {
         const dataUser = {
-            id: form.value.id,
+            id_usuario: form.value.id_usuario,
             username: form.value.username,
             pass: form.value.pass,
             email: form.value.email,
@@ -63,7 +63,7 @@ const onSubmit = async () => {
         const dataCustom =
             props.type === 'paciente'
                 ? {
-                      id: form.value.id,
+                      id_usuario: form.value.id_usuario,
                       contact_emerg: form.value.contact_emerg,
                       especialidad_requerida: form.value.especialidad_requerida,
                       medicamentos: form.value.medicamentos,
@@ -72,7 +72,7 @@ const onSubmit = async () => {
                   }
                 : props.type === 'supervisor'
                 ? {
-                      id: form.value.id,
+                      id_usuario: form.value.id_usuario,
                       disponibilidad: form.value.disponibilidad,
                       titulacion: form.value.titulacion,
                       salario: form.value.salario,
@@ -81,9 +81,9 @@ const onSubmit = async () => {
 
         console.log(dataUser);
         console.log(dataCustom);
-        console.log(props.row.id);
-        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id=${props.row.id}`, dataUser);
-        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${props.type}&id=${props.row.id}`, dataCustom);
+        console.log(props.row.id_usuario);
+        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id_usuario=${props.row.id_usuario}`, dataUser);
+        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${props.type}&id_usuario=${props.row.id_usuario}`, dataCustom);
         toast('positive', 'Usuario actualizado');
         emit('userUpdated');
         open.value = false;
@@ -95,9 +95,10 @@ const onSubmit = async () => {
 const fetchSupervisors = async () => {
     try {
         const response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&usertype=supervisor`);
+
         supervisorOptions.value = response.map((user: any) => ({
             label: user.nombre + ' ' + user.apellido,
-            value: user.id,
+            value: user.id_usuario,
         }));
     } catch (error) {
         console.error('Error fetching supervisors:', error);
@@ -120,7 +121,7 @@ onMounted(fetchSupervisors);
                 <q-form @submit.prevent="onSubmit" class="q-gutter-md q-pa-md">
                     <div>
                         <div class="row q-col-gutter-md">
-                            <q-input v-model="form.id" label="ID" disable filled class="col-6" />
+                            <q-input v-model="form.id_usuario" label="ID" disable filled class="col-6" />
                             <q-input v-model="form.username" label="Username" filled class="col-6" />
                             <q-input v-model="form.email" label="Email" type="email" filled class="col-6" />
                             <q-input v-model="form.dni" label="DNI" filled class="col-6" />
@@ -150,7 +151,7 @@ onMounted(fetchSupervisors);
                             <q-input v-model="form.especialidad_requerida" label="Especialidad Requerida" filled class="col-6" />
                             <q-input v-model="form.medicamentos" label="Medicamentos" filled class="col-6" />
                             <q-input v-model="form.alergias" label="Alergias" filled class="col-6" />
-                            <q-select require v-model="form.id_supervisor" :options="supervisorOptions" label="Seleccione un supervisor" filled class="col-6" selected />
+                            <q-select required v-model="form.id_supervisor" :options="supervisorOptions" label="Seleccione un supervisor" filled class="col-6" selected />
                         </div>
                     </div>
 

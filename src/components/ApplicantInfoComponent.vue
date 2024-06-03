@@ -22,7 +22,7 @@ const loadData = async () => {
         const combinedData = [...dataUsers, ...dataCustom];
 
         const allProperties = combinedData.reduce((acc, obj) => ({ ...acc, ...obj }), {});
-        const groupedData = combinedData.reduce((acc, obj) => ({ ...acc, [obj.id]: { ...(acc[obj.id] || {}), ...obj } }), {});
+        const groupedData = combinedData.reduce((acc, obj) => ({ ...acc, [obj.id_usuario]: { ...(acc[obj.id_usuario] || {}), ...obj } }), {});
         const combinedAndGroupedData = Object.values(groupedData);
 
         const dynamicColumns = Object.keys(allProperties).map((key) => ({
@@ -40,7 +40,7 @@ const loadData = async () => {
         data.value = data.value.filter((el: any) => el.activado);
         //Asi conseguimos quitar algun campo que no nos interese
         columns.value = columns.value.filter((el: any) => el.name !== 'activado');
-        
+
         columns.value.push({ name: 'actions', align: 'center', label: 'Aceptar', field: 'actions' });
     } catch (err) {
         error.value = 'Error al obtener la información';
@@ -51,7 +51,7 @@ const loadData = async () => {
 };
 const activateApplicant = async (id: string) => {
     try {
-        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=supervisor&id=${id}`, { id: id, activado: '1' });
+        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=supervisor&id_usuario=${id}`, { id_usuario: id, activado: '1' });
         toast('positive', 'Supervisor Activado');
         loadData();
     } catch (e) {
@@ -72,7 +72,7 @@ watchEffect(() => {
                     <template v-slot:top> </template>
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props">
-                            <q-btn color="positive" icon="check" @click="activateApplicant(props.row.id)" />
+                            <q-btn color="positive" icon="check" @click="activateApplicant(props.row.id_usuario)" />
                         </q-td>
                     </template>
                 </q-table>

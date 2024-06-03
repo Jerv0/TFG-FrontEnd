@@ -29,12 +29,14 @@ const loadData = async () => {
         columns.value = [];
         data.value = [];
         const dataUsers = await store.axiosGetWithTimeout(urlUsers.value);
+
+        console.log(dataUsers);
         const dataCustom = await store.axiosGetWithTimeout(urlCustom.value);
 
         const combinedData = [...dataUsers, ...dataCustom];
 
         const allProperties = combinedData.reduce((acc, obj) => ({ ...acc, ...obj }), {});
-        const groupedData = combinedData.reduce((acc, obj) => ({ ...acc, [obj.id]: { ...(acc[obj.id] || {}), ...obj } }), {});
+        const groupedData = combinedData.reduce((acc, obj) => ({ ...acc, [obj.id_usuario]: { ...(acc[obj.id_usuario] || {}), ...obj } }), {});
         const combinedAndGroupedData = Object.values(groupedData);
 
         const dynamicColumns = Object.keys(allProperties).map((key) => ({
@@ -46,8 +48,9 @@ const loadData = async () => {
         }));
 
         columns.value.splice(2, 0, ...dynamicColumns);
-        data.value = combinedAndGroupedData;
 
+        data.value = combinedAndGroupedData;
+        console.log(data.value);
         columns.value.push({ name: 'actions', align: 'center', label: 'Acciones', field: 'actions' });
     } catch (err) {
         error.value = 'Error al obtener la información';
@@ -58,7 +61,9 @@ const loadData = async () => {
 };
 const deleteRow = async (id: string) => {
     try {
-        await store.axiosDelete(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id="${id}"`);
+        console.log(id);
+        console.log(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id_usuario=${id}`);
+        await store.axiosDelete(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id_usuario=${id}`);
         // Después de eliminar la fila, volvemos a cargar los datos
         toast('negative', 'Usuario eliminado');
         loadData();
@@ -81,7 +86,7 @@ watchEffect(() => {
                 <q-td :props="props">
                     <ModalEdit :row="props.row" :type="table" @userUpdated="loadData" />
                     <q-space />
-                    <q-btn color="negative" icon="delete" @click="deleteRow(props.row.id)" />
+                    <q-btn color="negative" icon="delete" @click="deleteRow(props.row.id_usuario)" />
                 </q-td>
             </template>
         </q-table>

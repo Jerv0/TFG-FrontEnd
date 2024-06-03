@@ -10,7 +10,7 @@ interface Message {
 }
 
 interface Contact {
-    id: string;
+    id_usuario: string;
     nombre: string;
     apellido: string;
     usertype: string;
@@ -31,7 +31,7 @@ const isChatVisible = ref(false);
 const toggleChat = () => (isChatVisible.value = !isChatVisible.value);
 
 onMounted(() => {
-    userId.value = data.id;
+    userId.value = data.id_usuario;
 
     // Connect to Socket.IO server
     socket = io(`http://${import.meta.env.VITE_RUTA}:3000`, { transports: ['websocket', 'polling', 'flashsocket'] });
@@ -39,7 +39,7 @@ onMounted(() => {
     // Listen for partner joining private room
     socket.on('partnerJoinedPrivateRoom', (partnerId: string) => {
         if (partnerId !== userId.value) {
-            const partnerName = contacts.value.find((contact) => contact.id === partnerId)?.nombre;
+            const partnerName = contacts.value.find((contact) => contact.id_usuario === partnerId)?.nombre;
             if (partnerName) {
                 toast('success', `${partnerName} ha entrado al chat.`);
                 console.log(`(${partnerId}) se ha unido a la sala privada.`);
@@ -49,14 +49,16 @@ onMounted(() => {
 
     // Listen for messages from private room
     socket.on('messageFromPrivateRoom', (message: Message) => {
+        console.log(message);
+
         if (message.user === partnerId.value) {
-            const senderName = contacts.value.find((contact) => contact.id === message.user)?.nombre;
+            const senderName = contacts.value.find((contact) => contact.id_usuario === message.user)?.nombre;
             toast('info', `Nuevo mensaje de ${senderName}`);
         }
         messages.value.push(message);
     });
 
-    // Send user ID to server
+    // Send user id_usuario to server
     socket.emit('registerUser', userId.value);
 
     // Get list of contacts
@@ -66,7 +68,7 @@ onMounted(() => {
 const getContacts = async () => {
     let response;
     if (data.usertype === 'paciente') {
-        response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id=${dataCustom.id_supervisor}`);
+        response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id_usuario=${dataCustom.id_supervisor}`);
     } else {
         //Para que entre en supervisor y admin y tengan todos los contactos
         response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario`);
@@ -130,6 +132,9 @@ watch(
     },
     { deep: true }
 );
+const getName = (id: string) => {
+    return userId.value === id ? 'Yo' : contacts.value.find((contact) => contact.id_usuario === id)?.nombre;
+};
 </script>
 <template>
     <q-btn align="between" class="btn-fixed-width" color="accent" label="Chat" @click="toggleChat" />
@@ -140,7 +145,7 @@ watch(
                     <div class="contacts-list" v-if="contacts.length">
                         <q-list>
                             <q-input type="text" v-model="searchQuery" placeholder="Buscar contactos" v-if="data.usertype === 'supervisor'" />
-                            <q-item v-for="contact in filteredContacts" :key="contact.id" clickable @click="selectPartner(contact.id)" :class="{ 'selected-contact': contact.id === partnerId }">
+                            <q-item v-for="contact in filteredContacts" :key="contact.id_usuario" clickable @click="selectPartner(contact.id_usuario)" :class="{ 'selected-contact': contact.id_usuario === partnerId }">
                                 <q-item-section
                                     >{{ contact.nombre }} {{ contact.apellido }} <b>({{ contact.usertype }})</b></q-item-section
                                 >
@@ -154,7 +159,7 @@ watch(
 
                 <div v-if="partnerId" class="chat-section q-pa-md q-gutter-md">
                     <div class="chat-messages" ref="chatContainer" v-if="messages.length">
-                        <q-chat-message v-for="(message, index) in messages" :key="index" :text="[message.message]" :sent="message.user === userId" :name="message.user === userId ? 'Yo' : message.user" />
+                        <q-chat-message v-for="(message, index) in messages" :key="index" :text="[message.message]" :sent="message.user === userId" :name="getName(message.user)" />
                     </div>
 
                     <div>
