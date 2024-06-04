@@ -1,24 +1,23 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 import CardComponent from './CardComponent.vue';
 import DrawerAppBar from '../layouts/DrawerAppBar.vue';
 import ChatComponent from './ChatComponent.vue';
-import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import CloseSession from './CloseSessionComponent.vue';
 
 const count = ref<number | null>(null);
 
-const usersCount = async () => {
+const fetchUsersCount = async () => {
     try {
-        const response = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?`);
+        const response = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi`);
         count.value = response.data.usuarios.length;
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        console.error('Error fetching user count:', error);
     }
 };
 
-onMounted(() => {
-    usersCount();
-});
+onMounted(fetchUsersCount);
 </script>
 
 <template>
@@ -26,9 +25,12 @@ onMounted(() => {
         <DrawerAppBar />
         <q-page-container>
             <q-page class="q-pa-md">
-                <ChatComponent />
-                <div class="row q-col-gutter-md">
-                    <div class="col-12 col-md-6 col-lg-4 q-mb-md">
+                <CloseSession />
+                <div class="row q-gutter-md">
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <ChatComponent />
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4">
                         <CardComponent title="Usuarios" subtitle="Total de usuarios" :count="count" color="pink-8" />
                     </div>
                 </div>
@@ -38,45 +40,30 @@ onMounted(() => {
 </template>
 
 <style scoped>
-:root {
-    --bg: #fff;
-    --color: #333333;
-}
-
-html.dark-mode {
-    --bg: #232b32;
-    --color: #ddd8ca;
-}
-
 body {
     background-color: var(--bg);
     color: var(--color);
-    transition: background-color 0.3s, color 0.3s; 
+    transition: background-color 0.3s, color 0.3s;
 }
 
-
-.rounded-borders {
-    border-radius: 8px;
-}
-
-.shadow-2 {
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-}
 .row {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    gap: 16px; /* Improved spacing between elements */
 }
 
 .col-12 {
-    padding: 16px;
+    flex: 1 0 100%;
 }
 
-.bg-white {
-    background-color: var(--bg);
+.col-md-6 {
+    flex: 0 0 48%;
+    max-width: 48%;
 }
 
-.text-center {
-    text-align: center;
+.col-lg-4 {
+    flex: 0 0 32%;
+    max-width: 32%;
 }
 </style>

@@ -20,8 +20,7 @@ const urlCustom = computed(() => {
     return `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${props.table}`;
 });
 
-console.log(urlUsers.value);
-console.log(urlCustom.value);
+
 
 const loadData = async () => {
     loading.value = true; // Marcamos que se están cargando los datos
@@ -30,7 +29,6 @@ const loadData = async () => {
         data.value = [];
         const dataUsers = await store.axiosGetWithTimeout(urlUsers.value);
 
-        console.log(dataUsers);
         const dataCustom = await store.axiosGetWithTimeout(urlCustom.value);
 
         const combinedData = [...dataUsers, ...dataCustom];
@@ -50,7 +48,6 @@ const loadData = async () => {
         columns.value.splice(2, 0, ...dynamicColumns);
 
         data.value = combinedAndGroupedData;
-        console.log(data.value);
         columns.value.push({ name: 'actions', align: 'center', label: 'Acciones', field: 'actions' });
     } catch (err) {
         error.value = 'Error al obtener la información';
@@ -61,8 +58,7 @@ const loadData = async () => {
 };
 const deleteRow = async (id: string) => {
     try {
-        console.log(id);
-        console.log(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id_usuario=${id}`);
+  
         await store.axiosDelete(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id_usuario=${id}`);
         // Después de eliminar la fila, volvemos a cargar los datos
         toast('negative', 'Usuario eliminado');

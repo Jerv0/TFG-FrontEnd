@@ -6,14 +6,14 @@ const props = defineProps<{
     color: string;
 }>();
 
-//primary secondary  accent dark positive negative info warning
-//https://quasar.dev/style/color-palette/
+// primary, secondary, accent, dark, positive, negative, info, warning
+// https://quasar.dev/style/color-palette/
 </script>
 
 <template>
-    <q-card :class="'q-pa-md q-mr-md  q-ml-md q-mt-md bg-' + color" style="max-width: 280px">
+    <q-card :class="'q-pa-md q-mt-md bg-' + color" style="max-width: 280px">
         <q-card-section>
-            <div class="text-h6 bg">{{ props.title }}</div>
+            <div class="text-h6">{{ props.title }}</div>
             <div class="text-subtitle1">{{ props.subtitle }}</div>
         </q-card-section>
 
@@ -23,4 +23,8 @@ const props = defineProps<{
     </q-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+.q-card {
+    margin: 0 auto; /* Center the card horizontally */
+}
+</style>

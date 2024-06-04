@@ -4,6 +4,7 @@ import { ref, onMounted, nextTick, watch, computed } from 'vue';
 import io from 'socket.io-client';
 import { store } from '../store/store';
 import toast from '../utils/formatNotify';
+
 interface Message {
     user: string;
     message: string;
@@ -32,11 +33,8 @@ const toggleChat = () => (isChatVisible.value = !isChatVisible.value);
 
 onMounted(() => {
     userId.value = data.id_usuario;
-
-    // Connect to Socket.IO server
     socket = io(`http://${import.meta.env.VITE_RUTA}:3000`, { transports: ['websocket', 'polling', 'flashsocket'] });
 
-    // Listen for partner joining private room
     socket.on('partnerJoinedPrivateRoom', (partnerId: string) => {
         if (partnerId !== userId.value) {
             const partnerName = contacts.value.find((contact) => contact.id_usuario === partnerId)?.nombre;
@@ -47,7 +45,6 @@ onMounted(() => {
         }
     });
 
-    // Listen for messages from private room
     socket.on('messageFromPrivateRoom', (message: Message) => {
         console.log(message);
 
@@ -57,11 +54,7 @@ onMounted(() => {
         }
         messages.value.push(message);
     });
-
-    // Send user id_usuario to server
     socket.emit('registerUser', userId.value);
-
-    // Get list of contacts
     getContacts();
 });
 
@@ -104,13 +97,10 @@ const chatContainer = ref<HTMLDivElement | null>(null);
 const sendMessage = async () => {
     if (!messageInput.value.trim()) return;
     const partnerIdValue = partnerId.value;
-    // Send message to server without adding it to the messages array
     socket.emit('sendMessageToPrivateRoom', userId.value, partnerIdValue, messageInput.value);
     messageInput.value = '';
     // Wait for Vue to render the new message
     await nextTick();
-
-    // Scroll to bottom
     scrollToBottom();
 };
 
@@ -120,6 +110,7 @@ const scrollToBottom = () => {
         chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
     }
 };
+
 const filteredContacts = computed(() => {
     return contacts.value.filter((contact) => contact.nombre.toLowerCase().includes(searchQuery.value.toLowerCase()));
 });
@@ -132,83 +123,164 @@ watch(
     },
     { deep: true }
 );
+
 const getName = (id: string) => {
     return userId.value === id ? 'Yo' : contacts.value.find((contact) => contact.id_usuario === id)?.nombre;
 };
 </script>
+
 <template>
-    <q-btn align="between" class="btn-fixed-width" color="accent" label="Chat" @click="toggleChat" />
-    <div class="q-pa-md row justify-center">
-        <div style="width: 100%; max-width: 700px">
-            <div v-if="isChatVisible" class="q-pa-md row justify-center absolute-bottom-right container chat-container" :class="{ 'container-dark': $q.dark.isActive }">
-                <div class="contacts-section q-pa-md q-gutter-md">
-                    <div class="contacts-list" v-if="contacts.length">
-                        <q-list>
-                            <q-input type="text" v-model="searchQuery" placeholder="Buscar contactos" v-if="data.usertype === 'supervisor'" />
-                            <q-item v-for="contact in filteredContacts" :key="contact.id_usuario" clickable @click="selectPartner(contact.id_usuario)" :class="{ 'selected-contact': contact.id_usuario === partnerId }">
-                                <q-item-section
-                                    >{{ contact.nombre }} {{ contact.apellido }} <b>({{ contact.usertype }})</b></q-item-section
-                                >
-                            </q-item>
-                        </q-list>
-                    </div>
-                    <div v-else>
-                        <p>No hay contactos disponibles.</p>
-                    </div>
+    <q-btn class="btn-fixed" color="accent" label="Chat" @click="toggleChat" />
+    <div v-if="isChatVisible" class="chat-wrapper">
+        <div class="chat-container" :class="{ 'container-dark': $q.dark.isActive }">
+            <div class="contacts-section">
+                <q-input class="input" type="text" v-model="searchQuery" placeholder="Buscar contactos" v-if="data.usertype !== 'paciente'" />
+                <div class="contacts-list" v-if="contacts.length">
+                    <q-list>
+                        <q-item v-for="contact in filteredContacts" :key="contact.id_usuario" clickable @click="selectPartner(contact.id_usuario)" :class="{ 'selected-contact': contact.id_usuario === partnerId }">
+                            <q-item-section>
+                                {{ contact.nombre }} {{ contact.apellido }} <b>({{ contact.usertype }})</b>
+                            </q-item-section>
+                        </q-item>
+                    </q-list>
+                </div>
+                <div v-else>
+                    <p>No hay contactos disponibles.</p>
+                </div>
+            </div>
+
+            <div v-if="partnerId" class="chat-section">
+                <h6>Conversación con {{ getName(partnerId) }}</h6>
+                <div class="chat-messages" ref="chatContainer" v-if="messages.length">
+                    <q-chat-message v-for="(message, index) in messages" :key="index" :text="[message.message]" :sent="message.user === userId" :name="getName(message.user)" />
+                </div>
+                <div v-else>
+                    <h6 class="text-grey q-mt-md">Escribe tu primer mensaje a {{ getName(partnerId) }}!!</h6>
                 </div>
 
-                <div v-if="partnerId" class="chat-section q-pa-md q-gutter-md">
-                    <div class="chat-messages" ref="chatContainer" v-if="messages.length">
-                        <q-chat-message v-for="(message, index) in messages" :key="index" :text="[message.message]" :sent="message.user === userId" :name="getName(message.user)" />
-                    </div>
-
-                    <div>
-                        <q-input v-model="messageInput" filled placeholder="Escribe un mensaje" @keyup.enter="sendMessage" />
-                        <q-btn @click="sendMessage" color="primary" class="send-button">Enviar</q-btn>
-                    </div>
+                <div class="send-message-section">
+                    <q-input v-model="messageInput" filled placeholder="Escribe un mensaje" @keyup.enter="sendMessage" />
+                    <q-btn @click="sendMessage" color="primary" class="send-button">Enviar</q-btn>
                 </div>
             </div>
         </div>
     </div>
 </template>
 
-<style scoped>
-.chat-container {
-    width: 100%;
-    max-width: 700px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
-.selected-contact {
-    background-color: #c235b6;
-    /* Otros estilos que desees */
-}
-.contacts-section {
-    width: 30%;
-    border-right: 1px solid #ccc;
+<style scoped lang="scss">
+/* Estilo de las barras  */
+@import '../assets/variables.scss';
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
 }
 
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: $secondary;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: $secondary;
+}
+
+.selected-contact {
+    background-color: $secondary;
+}
+.input {
+    padding: 5px;
+}
+.chat-wrapper {
+    width: 100%;
+    max-width: 600px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2000;
+    background-color: var(--q-bg-page);
+    background-color: var(--q-bg-page);
+    color: var(--q-text-primary);
+}
+
+.chat-container {
+    background-color: white;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    z-index: 2000;
+}
+.container-dark {
+    background-color: #1c262b;
+    box-shadow: 0 1px 5px rgb(117, 116, 116);
+}
+
+.contacts-section,
 .chat-section {
-    width: 70%;
+    width: 100%;
+    max-width: 70%;
+    margin: 0 auto;
+}
+
+.contacts-list {
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 .chat-messages {
-    max-height: 300px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-    padding-right: 10px;
+    max-height: 350px;
+    overflow-x: hidden;
+    padding: 20px;
 }
 
-.chat-input-container {
+.send-message-section {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .send-button {
-    margin-top: 10px;
-    margin-left: 10px;
+    margin-left: 8px;
+}
+
+.btn-fixed-width {
+    width: 100px;
+    position: fixed;
+    z-index: 2001; /* Ensure button is above other elements */
+}
+
+.send-message-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+    margin-right: 7px;
+    .q-input {
+        flex-grow: 1;
+    }
+    .send-button {
+        padding: 10px 20px;
+    }
+}
+@media (min-width: 600px) {
+    .chat-container {
+        flex-direction: row;
+    }
+    .contacts-section {
+        max-width: 30%;
+    }
+    .chat-section {
+        max-width: 70%;
+    }
 }
 </style>

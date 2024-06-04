@@ -25,7 +25,7 @@ const login = async () => {
             store.addCookie('userData', response.data.usuarios[0]);
             const data: any = store.getCookie('userData');
             if (data.usertype !== 'admin') {
-                const responseType = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${data.usertype}&id_usuario=${data.id}`);
+                const responseType = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${data.usertype}&id_usuario=${data.id_usuario}`);
                 store.addCookie('userDataCustom', responseType.data.usuarios[0]);
             }
             router.push(`/${data.usertype}`);

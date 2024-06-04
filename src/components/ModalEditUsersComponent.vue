@@ -79,9 +79,6 @@ const onSubmit = async () => {
                   }
                 : null;
 
-        console.log(dataUser);
-        console.log(dataCustom);
-        console.log(props.row.id_usuario);
         await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id_usuario=${props.row.id_usuario}`, dataUser);
         await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${props.type}&id_usuario=${props.row.id_usuario}`, dataCustom);
         toast('positive', 'Usuario actualizado');
