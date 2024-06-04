@@ -41,7 +41,7 @@ let data: any = store.getCookie('userData');
       >
         <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
           <q-list padding >
-            <q-item clickable v-ripple :to="path">
+            <q-item clickable v-ripple to="/verDatos">
               <q-item-section avatar>
                 <q-icon name="account_circle" />
               </q-item-section>
@@ -92,4 +92,3 @@ let data: any = store.getCookie('userData');
 
 <style>
 </style>
-

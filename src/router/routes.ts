@@ -56,6 +56,12 @@ const routes = [
         component: () => import('components/ApplicantInfoComponent.vue'),
     },
     {
+        name: 'modificarDatos/:id',
+        path: '/verDatos',
+        component: () => import ('layouts/ProfileLayout.vue'),
+        children: [{ path: '/verDatos', component: () => import ('src/components/ModifyDataProfile.vue')}]
+    },
+    {
         name: 'bloqueado',
         path: '/bloqueado',
         component: () => import('components/ApplicantInfoComponent.vue'),

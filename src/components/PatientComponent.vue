@@ -7,6 +7,7 @@ import { ref } from 'vue';
 let data: any = store.getCookie('userData');
 const mes = ref(5)
 const anio = ref(2024)
+
  
 </script>
 
