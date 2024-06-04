@@ -18,11 +18,8 @@ const routes = [
     {
         name: 'paciente',
         path: '/paciente',
-        meta: {
-            profile: 'Paciente' // Establece el perfil como metadato
-        },
-        component: () => import ('layouts/ProfileLayout.vue'),
-        children: [{ path: '/paciente', component: () => import('src/components/PatientComponent.vue') }]
+        component: () => import ('src/components/PatientComponent.vue'),
+        // children: [{ path: '/paciente', component: () => import('src/components/PatientComponent.vue') }]
     },
     {
         name: 'hola',
@@ -31,19 +28,12 @@ const routes = [
     },
     {
         name: 'supervisor',
-        meta: {
-            profile: 'Supervisor'
-        }, 
-        component: () => import('layouts/ProfileLayout.vue'),
         path: '/supervisor',
-        children: [{ path: '/supervisor', component: () => import ('src/components/SupervisorComponent.vue')}],
+        component: () => import('src/components/SupervisorComponent.vue'),
     },
     {
         name: 'admin',
         path: '/admin',
-        meta: {
-            profile: 'Administrador'
-        },
         component: () => import('components/AdminComponent.vue'),
     },
     {
@@ -56,9 +46,9 @@ const routes = [
         component: () => import('components/ApplicantInfoComponent.vue'),
     },
     {
-        name: 'modificarDatos/:id',
+        name: 'modificarDatos',
         path: '/verDatos',
-        component: () => import ('layouts/ProfileLayout.vue'),
+        component: () => import ('layouts/DrawerApp.vue'),
         children: [{ path: '/verDatos', component: () => import ('src/components/ModifyDataProfile.vue')}]
     },
     {

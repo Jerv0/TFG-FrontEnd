@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import ChatComponent from './ChatComponent.vue';
 import CalendarComponent from './CalendarComponent.vue';
+import DrawerAppBar from '../layouts/DrawerAppBar.vue';
 import { store } from '../store/store';
-import { ref } from 'vue';
-
+import { ref} from 'vue';
 let data: any = store.getCookie('userData');
+
 const mes = ref(5)
 const anio = ref(2024)
 
@@ -13,6 +14,7 @@ const anio = ref(2024)
 
 <template>
     <q-layout view="hHh lpR fFf">
+        <DrawerAppBar/>
         <q-page-container>
             <p>{{ "id paciente: "+ data.id_usuario }}</p>
             <div>Pantalla principal

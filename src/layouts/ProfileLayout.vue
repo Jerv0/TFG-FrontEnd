@@ -13,22 +13,18 @@ routes.pop();
  
 const drawer = ref<boolean>(false); 
 
-const route = useRoute();
+// const route = useRoute();
 // const profile = route.meta.profile;
-let path = route.fullPath;
-let data: any = store.getCookie('userData');
-
+ 
 
 </script>
 
 <template>
     <q-layout view="hHh lpR fFf">
-      
       <q-header elevated class="bg-cyan-8">
-      
             <q-toolbar>
               <!-- <q-toolbar-title>Perfil de {{ profile}}</q-toolbar-title> -->
-                <q-toolbar-title>Bienvenido {{ data.username }}</q-toolbar-title>
+                <q-toolbar-title>App</q-toolbar-title>
                 <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
             </q-toolbar>
       </q-header>

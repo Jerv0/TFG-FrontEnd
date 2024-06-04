@@ -76,8 +76,7 @@ onMounted(() => {
     <q-layout view="hHh lpR fFf">
       
         <q-page-container>
-            <p>{{ data }}</p>
-            <p>{{ data.id_usuario }}</p>
+           <h4>Datos personales de {{username}} </h4>
             <q-form @submit.prevent="onSubmit" class="q-gutter-md q-pa-md">
                     <q-form>
                         <div class="row q-col-gutter-md">

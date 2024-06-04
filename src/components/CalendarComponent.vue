@@ -75,6 +75,16 @@ const importarTareas = async () => {
   }
 };
 
+const obtenerDiaHoy = () => {
+  const hoy = new Date();
+  const dia = hoy.getDate();
+  const mes = hoy.getMonth() + 1;
+  const anio = hoy.getFullYear();
+  return `${dia}/${mes}/${anio}`;
+};
+
+const diaHoy = obtenerDiaHoy();
+
 // Llamar a importarTareas cuando el componente se monte
 onMounted(() => {
   importarTareas();
@@ -86,14 +96,14 @@ onMounted(() => {
     <thead>
       <tr>
         <th></th>
-        <th v-for="c in cols" :key="c">{{ c }}</th>
+        <th v-for="c in cols" :key="c" >{{ c }}</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="i in props.ROWS" :key="i">
         <th>{{ i - 1 }}</th>
-        <td v-for="(c, j) in cols" :key="c">
-          <CellComponent :valor="tablaMes[i-1][j]" :tareas="tareas" />
+        <td v-for="(c, j) in cols" :key="c" class="calendar-cell" :class="{ 'today': tablaMes[i - 1][j]  === diaHoy }">
+          <CellComponent v-if="tablaMes[i - 1][j] !== '-'" :valor="tablaMes[i-1][j]" :tareas="tareas" />
         </td>
       </tr>
     </tbody>
@@ -123,6 +133,16 @@ td {
   border: 1px solid #ccc;
   height: 1.5em;
   overflow: hidden;
+}
+
+.calendar-cell {
+  width: 100px;
+  height: 130px;
+  border: 1px solid #ccc;
+}
+
+.today{
+     background-color: #df6981; 
 }
 
 </style>
