@@ -1,8 +1,10 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts"> 
 import {ref, onMounted} from 'vue'
 import {store} from '../store/store'
 import axios from 'axios'
 import { validateEmail, validateText} from '../utils/funcionesValidar';
+import DrawerAppBar from '../layouts/DrawerAppBar.vue';
 import toast from '../utils/formatNotify';
 
 let data: any = store.getCookie('userData');
@@ -74,7 +76,7 @@ onMounted(() => {
 
 <template>
     <q-layout view="hHh lpR fFf">
-      
+        <DrawerAppBar/>
         <q-page-container>
            <h4>Datos personales de {{username}} </h4>
             <q-form @submit.prevent="onSubmit" class="q-gutter-md q-pa-md">
@@ -93,10 +95,9 @@ onMounted(() => {
                     </q-form>
                     <div class="row justify-end q-gutter-sm q-mt-md">
                         <q-btn  type="submit" label="Guardar" color="primary" />
-                        <q-btn label="Cerrar" color="secondary"  />
+                        <q-btn label="Cerrar" color="secondary" to="/paciente" />
                     </div>
             </q-form>
-            <q-btn align="between" class="btn-fixed-width" color="accent" label="Volver" to="/paciente" />
         </q-page-container>
     </q-layout>
 </template>

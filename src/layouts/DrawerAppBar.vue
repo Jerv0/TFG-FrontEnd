@@ -1,20 +1,20 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
-import { ref} from 'vue';
-import { useRoute } from 'vue-router';
-import DarkModeComponent from '../components/DarkModeComponent.vue';
+import { ref } from "vue";
+import { useRoute } from "vue-router";
+import DarkModeComponent from "../components/DarkModeComponent.vue";
 
 const TITLE = <string>process.env.APP_TITLE;
-const leftDrawerOpen = ref<boolean>(false); 
+const leftDrawerOpen = ref<boolean>(false);
 
-import { store } from '../store/store';
+import { store } from "../store/store";
 const toggleLeftDrawer = () => (leftDrawerOpen.value = !leftDrawerOpen.value);
 
 defineOptions({
-  name: 'MainLayout',
+  name: "MainLayout",
 });
 
-const prueba: any = store.getCookie('userData') || null;
+const prueba: any = store.getCookie("userData") || null;
 
 const route = useRoute();
 const currentRoute = ref(route.fullPath);
@@ -25,7 +25,7 @@ const currentRoute = ref(route.fullPath);
     <q-toolbar>
       <q-toolbar-title> {{ TITLE }} </q-toolbar-title>
       <DarkModeComponent />
-    <!--   {{ store }}
+      <!--   {{ store }}
       {{ store.getCookie("userData") }}
       {{ store.getCookie("userDataCustom") }} -->
       <q-btn
@@ -39,7 +39,16 @@ const currentRoute = ref(route.fullPath);
     </q-toolbar>
   </q-header>
 
-  <q-drawer v-model="leftDrawerOpen"  v-if="currentRoute != '/' && currentRoute != '/Register' && currentRoute != '/Login'" show-if-above bordered >
+  <q-drawer
+    v-model="leftDrawerOpen"
+    v-if="
+      currentRoute != '/' &&
+      currentRoute != '/Register' &&
+      currentRoute != '/Login'
+    "
+    show-if-above
+    bordered
+  >
     <!-- Esto se tendria que actualizar con la foto , nombre , etc... de cuando este registrado el usuario -->
     <q-img
       class="absolute-top"
@@ -50,8 +59,8 @@ const currentRoute = ref(route.fullPath);
         <q-avatar size="56px" class="q-mb-sm">
           <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
         </q-avatar>
-        <div class="text-weight-bold">{{prueba.nombre}}</div>
-        <div>@{{prueba.username}}</div>
+        <div class="text-weight-bold">{{ prueba.nombre }}</div>
+        <div>@{{ prueba.username }}</div>
       </div>
     </q-img>
 
@@ -133,7 +142,6 @@ const currentRoute = ref(route.fullPath);
           </q-item-section>
         </q-item>
       </q-list>
-
     </q-scroll-area>
   </q-drawer>
 </template>

@@ -48,8 +48,7 @@ const routes = [
     {
         name: 'modificarDatos',
         path: '/verDatos',
-        component: () => import ('layouts/DrawerApp.vue'),
-        children: [{ path: '/verDatos', component: () => import ('src/components/ModifyDataProfile.vue')}]
+        component: () => import ('src/components/ModifyDataProfile.vue'),
     },
     {
         name: 'bloqueado',

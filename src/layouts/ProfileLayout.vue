@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import routes from '../router/routes';
-import { useRoute } from 'vue-router';
 import { store } from '../store/store';
 
 

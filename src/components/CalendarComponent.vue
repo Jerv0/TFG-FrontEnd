@@ -101,7 +101,7 @@ onMounted(() => {
     </thead>
     <tbody>
       <tr v-for="i in props.ROWS" :key="i">
-        <th>{{ i - 1 }}</th>
+        <th style="visibility: disabled"></th>
         <td v-for="(c, j) in cols" :key="c" class="calendar-cell" :class="{ 'today': tablaMes[i - 1][j]  === diaHoy }">
           <CellComponent v-if="tablaMes[i - 1][j] !== '-'" :valor="tablaMes[i-1][j]" :tareas="tareas" />
         </td>
