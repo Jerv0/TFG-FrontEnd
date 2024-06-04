@@ -5,9 +5,7 @@ import axios from 'axios'
 import { validateEmail, validateText} from '../utils/funcionesValidar';
 import toast from '../utils/formatNotify';
 
-
 let data: any = store.getCookie('userData');
-const emit = defineEmits(['userUpdated']);
 
 let id_usuario = data.id_usuario
 let username = ref<string>('')
@@ -21,7 +19,6 @@ let dir = ref<string>('')
 let tel = ref<string>('')
 let usertype = ref<string>('')
 let fecha_creacion = ref()
-
 
 const importarUsuarios= async () => {
   try {
@@ -38,15 +35,10 @@ const importarUsuarios= async () => {
     fecha_creacion.value = response.data.usuarios[0].fecha_creacion;
     usertype.value = response.data.usuarios[0].usertype;
 
-    console.log(nombre)
-    console.log(response.data)
- 
-    
   } catch (error) {
     console.log('error', 'Error de conexión');
   }
 };
-
 
 const onSubmit = async () => {
     try {
@@ -69,7 +61,6 @@ const onSubmit = async () => {
 
         await axios.put(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id_usuario=${data.id_usuario}`, dataUser);
         toast('positive', 'Usuario actualizado');
-        emit('userUpdated');
     } catch (e) {
         console.log(e);
     }
