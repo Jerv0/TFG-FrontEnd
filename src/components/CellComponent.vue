@@ -1,3 +1,18 @@
+<template>
+  <div class="celda">
+    <p class="fecha">{{ props.valor }}</p>
+    <div class="tareas" v-for="(el, index) in tareasFiltradas" :key="index" :style="{ backgroundColor: randomColor() }">
+      <div class="tarea-header">
+        <p :class="['titulo', { done: tareasCompletadas[index] }]" @click="modificar(index)">{{ el.titulo }}</p>
+        <button class="buttonDone" @click="modificar(index)">
+          <img src="../../dist/spa/icons/done.png" />
+        </button>
+      </div>
+      <!-- <p :class="['descripcion', { done: tareasCompletadas[index] }]">{{ el.descripcion }}</p> -->
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { defineProps, computed, ref } from 'vue';
 
@@ -16,6 +31,8 @@ const props = defineProps<Props>();
 
 const tareasCompletadas = ref<boolean[]>([]);
 
+const colores = ['#EA77CD', '#3BDFB5', '#CF69EA', '#ED873B', '#EF4F42', '#EECC4E', '#70ED55', '#5FA0E9'];
+
 const tareasFiltradas = computed(() => {
   return props.tareas?.filter((el) => el.fecha === props.valor);
 });
@@ -25,23 +42,12 @@ const modificar = (index: number) => {
   tareasCompletadas.value[index] = !tareasCompletadas.value[index];
 };
 
+const randomColor = () => {
+  // Generar un índice aleatorio para el array de colores
+  const randomIndex = Math.floor(Math.random() * colores.length);
+  return colores[randomIndex];
+};
 </script>
-
-
-<template>
-  <div class="celda">
-    <p class="fecha">{{ props.valor }}</p>
-    <div class="tareas" v-for="(el, index) in tareasFiltradas" :key="index">
-      <div class="tarea-header">
-        <p :class="['titulo', { done: tareasCompletadas[index] }]">{{ el.titulo }}</p>
-        <button class="buttonDone" @click="modificar(index)">
-          <img src="../../dist/spa/icons/done.png" />
-        </button>
-      </div>
-      <p :class="['descripcion', { done: tareasCompletadas[index] }]">{{ el.descripcion }}</p>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 p {
@@ -50,19 +56,20 @@ p {
 
 .tareas {
   margin-bottom: 10px;
-  border: 2px dotted #df6981;
-  border-radius: 25px;
   text-align: center;
   margin-top: 20px;
-  background-color: rgb(204, 143, 73); 
   color: white;
   font-size: 20px;
-  padding: 10px; /* Añade un poco de relleno para que el contenido no esté pegado al borde */
+  
+}
+
+.tareas .titulo {
+  cursor: pointer; /* Cambia el cursor a mano cuando pasas por encima */
 }
 
 .tarea-header {
   display: flex;
-  justify-content: space-between;
+  justify-content:space-evenly;
   align-items: center;
 }
 
@@ -72,14 +79,16 @@ button img {
 }
 
 .titulo {
-  color: red;
+  color: black;
 }
 
 .done {
   color: green;
+  text-decoration: line-through; /* Tacha el texto */
 }
 
-.cell, .cell input {
+.cell,
+.cell input {
   height: 1.5em;
   line-height: 1.5;
   font-size: 15px;
@@ -94,5 +103,3 @@ button img {
   box-sizing: border-box;
 }
 </style>
-
-

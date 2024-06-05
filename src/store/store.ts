@@ -24,6 +24,10 @@ export const store = reactive({
     syncDataUser(nameCookie: string) {
         this.dataUser.value = cookies.get(nameCookie);
     },
+    updateCookie(nameCookie: string, data: any) {
+        this.dataUser.value = data;
+        cookies.set(nameCookie, data); // Ajusta las opciones de la cookie según sea necesario
+    },
 
     async axiosGetWithTimeout(url: string, time = 0.3) {
         try {

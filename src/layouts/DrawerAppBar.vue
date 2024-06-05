@@ -1,20 +1,20 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRoute } from "vue-router";
-import DarkModeComponent from "../components/DarkModeComponent.vue";
+import { ref } from 'vue';
+import { useRoute } from 'vue-router';
+import DarkModeComponent from '../components/DarkModeComponent.vue';
 
 const TITLE = <string>process.env.APP_TITLE;
 const leftDrawerOpen = ref<boolean>(false);
 
-import { store } from "../store/store";
+import { store } from '../store/store';
 const toggleLeftDrawer = () => (leftDrawerOpen.value = !leftDrawerOpen.value);
 
 defineOptions({
-  name: "MainLayout",
+  name: 'MainLayout',
 });
 
-const prueba: any = store.getCookie("userData") || null;
+const prueba: any = store.getCookie('userData') || null;
 
 const route = useRoute();
 const currentRoute = ref(route.fullPath);

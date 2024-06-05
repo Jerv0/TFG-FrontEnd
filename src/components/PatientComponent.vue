@@ -8,7 +8,7 @@ import { ref } from 'vue';
 
 const data: any = store.getCookie('userData') || null;
 
-const mes = ref<number>(3);
+const mes = ref<number>(5);
 const anio = ref<number>(2024);
 
 const meses = <string[]>[
@@ -37,43 +37,22 @@ const cambiarMes = (incremento: number) => {
   }
 };
 
-const cambiarAnio = (incremento: number) => {
-  anio.value += incremento;
-};
+
 </script>
 
 <template>
   <q-layout view="hHh lpR fFf">
     <DrawerAppBar />
     <q-page-container>
-      <p>{{ "id paciente: " + data.id_usuario }}</p>
+      <!-- <p>{{ "id paciente: " + data.id_usuario }}</p> -->
       <div class="datos">
         <div class="contain">
           <div class="select">
-            <button class="flechaAnio" @click="cambiarAnio(-1)">
-              &lt;&lt;
-            </button>
             <button class="flecha" @click="cambiarMes(-1)">←</button>
-            <select v-model="mes" class="option">
-              <option
-                v-for="(month, index) in meses"
-                :value="index + 1"
-                :key="index"
-              >
-                {{ month }}
-              </option>
-            </select>
+            <input class="option" type="string" v-model="meses[mes - 1]" readonly>
           </div>
-          <div class="select">
-            <input
-              class="option"
-              type="number"
-              v-model="anio"
-              min="2000"
-              max="2050"
-            />
+          <div>
             <button class="flecha" @click="cambiarMes(1)">→</button>
-            <button class="flechaAnio" @click="cambiarAnio(1)">&gt;&gt;</button>
           </div>
         </div>
       </div>
@@ -85,13 +64,6 @@ const cambiarAnio = (incremento: number) => {
       />
       <!-- Importar frases aleatorias -->
       <ChatComponent />
-      <q-btn
-        align="between"
-        class="btn-fixed-width"
-        color="accent"
-        label="Cerrar sesión"
-        to="/"
-      />
     </q-page-container>
   </q-layout>
 </template>
@@ -106,26 +78,6 @@ const cambiarAnio = (incremento: number) => {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-header{
-    background: #0575E6;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #021B79, #0575E6);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #021B79, #0575E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-
-#contenedor{
-    background-color: #D4F3E0 ;
-}
-
-h1 {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    height: 65px;
-    width: 100%;
-    font-weight: bold;
-    font-size: 2.5em;
-    color: #f0f0f0; 
-    text-align: center;
 }
 
 .datos {
@@ -148,11 +100,12 @@ h1 {
 .option {
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid #c87531;
     border-radius: 5px;
     background-color: #fff;
-    width: 200px;
+    width: 105px;
     color: #555; /* Color del texto */
+    text-align: center;
 }
 
 .option:hover {
@@ -169,16 +122,16 @@ h1 {
     font-size: 16px;
     border: none;
     border-radius: 5px;
-    background-color: #4CAF50;
-    margin-left: 14px;
-    margin-right: 14px;
+    background-color: #ff651d;
+    margin-left: 25px;
+    margin-right: 25px;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 .flecha:hover {
-    background-color: #45a049;
+    background-color:  #ff651d;
 }
 
 .flechaAnio{
@@ -186,7 +139,7 @@ h1 {
     font-size: 16px;
     border: none;
     border-radius: 5px;
-    background-color: #4CAF50;
+    background-color: #ff651d;
     margin-left: 45px;
     margin-right: 45px;
     color: white;

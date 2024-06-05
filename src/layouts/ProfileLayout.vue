@@ -11,11 +11,8 @@ defineOptions({
 routes.pop();
  
 const drawer = ref<boolean>(false); 
-
 // const route = useRoute();
 // const profile = route.meta.profile;
- 
-
 </script>
 
 <template>

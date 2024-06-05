@@ -59,9 +59,10 @@ const onSubmit = async () => {
             usertype: usertype.value,
         };
 
-        console.log(dataUser);
 
         await axios.put(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id_usuario=${data.id_usuario}`, dataUser);
+        
+        store.updateCookie('userData', dataUser)
         toast('positive', 'Usuario actualizado');
     } catch (e) {
         console.log(e);
@@ -94,7 +95,7 @@ onMounted(() => {
                         </div>
                     </q-form>
                     <div class="row justify-end q-gutter-sm q-mt-md">
-                        <q-btn  type="submit" label="Guardar" color="primary" />
+                        <q-btn type="submit" label="Guardar" color="primary"/>
                         <q-btn label="Cerrar" color="secondary" to="/paciente" />
                     </div>
             </q-form>
