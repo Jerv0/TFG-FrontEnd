@@ -73,7 +73,7 @@ watchEffect(() => {
 </script>
 <template>
     <div class="q-pa-md">
-        {{ store }}
+
         <q-table v-if="!loading" :rows="data" :columns="columns" row-key="id" class="my-sticky-last-column-table">
             <template v-slot:top>
                 <ModalCreate @userUpdated="loadData" />

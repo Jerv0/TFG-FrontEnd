@@ -111,9 +111,20 @@ const clearFields = () => {
 const fetchSupervisors = async () => {
     try {
         const response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&usertype=supervisor`);
-        supervisorOptions.value = response.map((user: any) => ({
+        const responseCustom = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=supervisor&activado=1`);
+
+        /**
+         * SOME es un método en JavaScript que verifica si al menos un elemento en un array cumple con una condición proporcionada
+         * por una función de prueba. La función some() devuelve true si al menos un elemento del array satisface la condición de la
+         * función de prueba, y false si ningún elemento lo hace.
+         */
+        const filteredResponse = response.filter((el: any) => {
+            return responseCustom.some((customEl: any) => customEl.id_usuario === el.id_usuario);
+        });
+
+        supervisorOptions.value = filteredResponse.map((user: any) => ({
             label: user.nombre + ' ' + user.apellido,
-            value: user.id,
+            value: user.id_usuario,
         }));
     } catch (error) {
         console.error('Error fetching supervisors:', error);

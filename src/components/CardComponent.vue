@@ -4,6 +4,7 @@ const props = defineProps<{
     subtitle: string;
     count: unknown;
     color: string;
+    url: string;
 }>();
 
 // primary, secondary, accent, dark, positive, negative, info, warning
@@ -11,7 +12,7 @@ const props = defineProps<{
 </script>
 
 <template>
-    <q-card :class="'q-pa-md q-mt-md bg-' + color" style="max-width: 280px">
+    <q-card :class="'q-pa-md q-mt-md bg-' + props.color" style="max-width: 280px">
         <q-card-section>
             <div class="text-h6">{{ props.title }}</div>
             <div class="text-subtitle1">{{ props.subtitle }}</div>
@@ -19,6 +20,7 @@ const props = defineProps<{
 
         <q-card-section class="q-pt-none">
             <div class="text-h3">{{ props.count }}</div>
+            <q-btn v-if="props.url !== ''" :color="props.color" label="Ver" icon="visibility" :to="props.url" />
         </q-card-section>
     </q-card>
 </template>

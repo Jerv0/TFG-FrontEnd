@@ -46,8 +46,6 @@ onMounted(() => {
     });
 
     socket.on('messageFromPrivateRoom', (message: Message) => {
-        console.log(message);
-
         if (message.user === partnerId.value) {
             const senderName = contacts.value.find((contact) => contact.id_usuario === message.user)?.nombre;
             toast('info', `Nuevo mensaje de ${senderName}`);
@@ -130,10 +128,12 @@ const getName = (id: string) => {
 </script>
 
 <template>
-    <q-btn class="btn-fixed" color="accent" label="Chat" @click="toggleChat" />
+    <q-btn class="btn-fixed" color="secondary" icon="chat" @click="toggleChat" />
+
     <div v-if="isChatVisible" class="chat-wrapper">
         <div class="chat-container" :class="{ 'container-dark': $q.dark.isActive }">
             <div class="contacts-section">
+                <q-btn class="btn-cerrar" color="accent" label="X" @click="toggleChat" />
                 <q-input class="input" type="text" v-model="searchQuery" placeholder="Buscar contactos" v-if="data.usertype !== 'paciente'" />
                 <div class="contacts-list" v-if="contacts.length">
                     <q-list>
@@ -199,6 +199,7 @@ const getName = (id: string) => {
 .input {
     padding: 5px;
 }
+
 .chat-wrapper {
     width: 100%;
     max-width: 600px;
@@ -217,7 +218,7 @@ const getName = (id: string) => {
     display: flex;
     flex-direction: column;
     border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 5px rgb(117, 116, 116);
     z-index: 2000;
 }
 .container-dark {

@@ -67,46 +67,75 @@ watchEffect(() => {
         <DrawerAppBar />
         <q-page-container>
             <q-page>
-                {{ store }}
-                <q-table v-if="!loading" :rows="data" :columns="columns" row-key="id" class="my-sticky-last-column-table">
-                    <template v-slot:top> </template>
-                    <template v-slot:body-cell-actions="props">
-                        <q-td :props="props">
-                            <q-btn color="positive" icon="check" @click="activateApplicant(props.row.id_usuario)" />
-                        </q-td>
-                    </template>
-                </q-table>
-                <div v-if="loading" class="spinner-container">
-                    <q-spinner-hourglass size="50px" color="primary" />
-                </div>
-                <div v-if="error">
-                    <h3>Error:</h3>
-                    <p>{{ error }}</p>
+                <div class="q-pa-md">
+                    <q-table v-if="!loading" :rows="data" :columns="columns" row-key="id" class="my-sticky-last-column-table">
+                        <template v-slot:top> </template>
+                        <template v-slot:body-cell-actions="props">
+                            <q-td :props="props">
+                                <q-btn color="positive" icon="check" @click="activateApplicant(props.row.id_usuario)" />
+                            </q-td>
+                        </template>
+                    </q-table>
+                    <div v-if="loading" class="spinner-container">
+                        <q-spinner-hourglass size="50px" color="primary" />
+                    </div>
+                    <div v-if="error">
+                        <h3>Error:</h3>
+                        <p>{{ error }}</p>
+                    </div>
                 </div>
             </q-page>
         </q-page-container>
     </q-layout>
 </template>
 
-<style lang="sass">
+<style lang="scss">
+/* Estilo de las barras */
+@import '../assets/variables.scss';
 
-.my-sticky-last-column-table
-  thead tr:last-child th:last-child
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+}
 
-    background-color: #ada6a8
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 5cqb;
+}
 
-  td:last-child
-    background-color: #ada6a8
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: $secondary;
+    border-radius: 5px;
+}
 
-  th:last-child,
-  td:last-child
-    position: sticky
-    right: 0
-    z-index: 1
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: $secondary;
+}
 
-.spinner-container
-  position: absolute
-  top: 50%
-  left: 50%
-  transform: translate(-50%, -50%)
+.my-sticky-last-column-table {
+    thead tr:last-child th:last-child {
+        background-color: #ada6a8;
+    }
+
+    td:last-child {
+        background-color: #ada6a8;
+    }
+
+    th:last-child,
+    td:last-child {
+        position: sticky;
+        right: 0;
+        z-index: 1;
+    }
+}
+
+.spinner-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 </style>

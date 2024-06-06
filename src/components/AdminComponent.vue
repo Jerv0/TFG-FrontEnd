@@ -1,23 +1,34 @@
+<!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { ref, onMounted, watch } from 'vue';
+import { store } from '../store/store';
 import CardComponent from './CardComponent.vue';
 import DrawerAppBar from '../layouts/DrawerAppBar.vue';
 import ChatComponent from './ChatComponent.vue';
 import CloseSession from './CloseSessionComponent.vue';
+const urls = [
+    `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}`,
+    `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=paciente`,
+    `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=supervisor&activado=0`,
+    `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=supervisor&activado=1`,
+];
 
-const count = ref<number | null>(null);
+const datosCards = ref([
+    { title: 'Usuarios', subtitle: 'Total de usuarios', count: 0, color: 'primary', url: '' },
+    { title: 'Pacientes', subtitle: 'Total de pacientes', count: 0, color: 'secondary', url: 'ver/paciente' },
+    { title: 'Candidatos', subtitle: 'Total de candidatos', count: 0, color: 'primary', url: 'candidaturas' },
+    { title: 'Supervisores activos', subtitle: 'Total de supervisores', count: 0, color: 'secondary', url: 'ver/supervisor' },
+]);
 
-const fetchUsersCount = async () => {
-    try {
-        const response = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi`);
-        count.value = response.data.usuarios.length;
-    } catch (error) {
-        console.error('Error fetching user count:', error);
-    }
+const fillCards = async () => {
+    await Promise.all(
+        datosCards.value.map(async (el, index) => {
+            el.count = await store.fetchCount(urls[index]);
+        })
+    );
 };
 
-onMounted(fetchUsersCount);
+fillCards();
 </script>
 
 <template>
@@ -25,13 +36,14 @@ onMounted(fetchUsersCount);
         <DrawerAppBar />
         <q-page-container>
             <q-page class="q-pa-md">
-                <CloseSession />
+                <!-- <CloseSession /> -->
+                <!-- <ChatComponent /> -->
                 <div class="row q-gutter-md">
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <ChatComponent />
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <CardComponent title="Usuarios" subtitle="Total de usuarios" :count="count" color="pink-8" />
+                    <!-- Sección de tarjetas de información -->
+                    <div class="col-12 col-md-6 col-lg-8">
+                        <div class="row q-gutter-md">
+                            <CardComponent v-for="card in datosCards" :key="card.title" :title="card.title" :subtitle="card.subtitle" :count="card.count" :url="card.url" :color="card.color" />
+                        </div>
                     </div>
                 </div>
             </q-page>
@@ -47,6 +59,7 @@ body {
 }
 
 .row {
+    margin-top: 2px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

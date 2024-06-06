@@ -25,6 +25,15 @@ export const store = reactive({
         this.dataUser.value = cookies.get(nameCookie);
     },
 
+    async fetchCount(url: string, time = 0.3) {
+        try {
+            await new Promise((resolve) => setTimeout(resolve, time * 1000));
+            const response = await axios.get(url);
+            return response.data.usuarios.length;
+        } catch (error) {
+            throw new Error(`Error fetching count: ${error}`);
+        }
+    },
     async axiosGetWithTimeout(url: string, time = 0.3) {
         try {
             await new Promise((resolve) => setTimeout(resolve, time * 1000));

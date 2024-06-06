@@ -9,6 +9,11 @@ import { validatePassword, validPassword } from '../utils/funcionesValidar';
 
 const emit = defineEmits(['userUpdated']);
 const supervisorOptions = ref<any[]>([]);
+
+const activadoOptions = [
+    { label: 'Si', value: '1' },
+    { label: 'No', value: '0' },
+];
 const props = defineProps<{
     row: {
         id_usuario: string;
@@ -33,6 +38,7 @@ const props = defineProps<{
         disponibilidad: string;
         titulacion: string;
         salario: string;
+        activado: any;
     };
     type: string;
 }>();
@@ -76,6 +82,7 @@ const onSubmit = async () => {
                       disponibilidad: form.value.disponibilidad,
                       titulacion: form.value.titulacion,
                       salario: form.value.salario,
+                      activado: form.value.activado.value,
                   }
                 : null;
 
@@ -92,8 +99,13 @@ const onSubmit = async () => {
 const fetchSupervisors = async () => {
     try {
         const response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&usertype=supervisor`);
+        const responseCustom = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=supervisor&activado=1`);
 
-        supervisorOptions.value = response.map((user: any) => ({
+        const filteredResponse = response.filter((el: any) => {
+            return responseCustom.some((customEl: any) => customEl.id_usuario === el.id_usuario);
+        });
+
+        supervisorOptions.value = filteredResponse.map((user: any) => ({
             label: user.nombre + ' ' + user.apellido,
             value: user.id_usuario,
         }));
@@ -157,6 +169,7 @@ onMounted(fetchSupervisors);
                             <q-input v-model="form.disponibilidad" label="Disponibilidad" filled class="col-6" />
                             <q-input v-model="form.titulacion" label="Titulacion" filled class="col-6" />
                             <q-input v-model="form.salario" label="Salario" filled class="col-6" />
+                            <q-select required v-model="form.activado" :options="activadoOptions" label="Activado" filled class="col-6" selected />
                         </div>
                     </div>
                     <div class="row justify-end q-gutter-sm q-mt-md">
