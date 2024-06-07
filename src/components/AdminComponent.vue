@@ -17,7 +17,7 @@ const datosCards = ref([
     { title: 'Usuarios', subtitle: 'Total de usuarios', count: 0, color: 'primary', url: '' },
     { title: 'Pacientes', subtitle: 'Total de pacientes', count: 0, color: 'secondary', url: 'ver/paciente' },
     { title: 'Candidatos', subtitle: 'Total de candidatos', count: 0, color: 'primary', url: 'candidaturas' },
-    { title: 'Supervisores activos', subtitle: 'Total de supervisores', count: 0, color: 'secondary', url: 'ver/supervisor' },
+    { title: 'Supervisores', subtitle: 'Total de supervisores', count: 0, color: 'secondary', url: 'ver/supervisor' },
 ]);
 
 const fillCards = async () => {
@@ -38,6 +38,7 @@ fillCards();
             <q-page class="q-pa-md">
                 <!-- <CloseSession /> -->
                 <!-- <ChatComponent /> -->
+                
                 <div class="row q-gutter-md">
                     <!-- Sección de tarjetas de información -->
                     <div class="col-12 col-md-6 col-lg-8">

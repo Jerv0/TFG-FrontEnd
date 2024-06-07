@@ -15,8 +15,8 @@ export const store = reactive({
     removeCookie(name: string) {
         cookies.remove(name);
     },
-    addCookie(name: string, value: any) {
-        cookies.set(name, value);
+    addCookie(name: string, value: any, time = '4h') {
+        cookies.set(name, value, time);
     },
     getAllCookies() {
         return cookies.keys();

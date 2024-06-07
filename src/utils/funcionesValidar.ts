@@ -47,7 +47,7 @@ export const formatString = (str: string): string => {
     const parts: string[] = str.trim().split(/\s+/);
     // Formatea cada palabra recibida
     const formatParts: string[] = parts.map((el) => {
-        return el.charAt(0).toUpperCase() + el.slice(1).trim().normalize();
+        return el.charAt(0).toUpperCase + el.slice(1).trim().normalize();
     });
     // Unir las partes formateadas de nuevo en una sola cadena
     return formatParts.join(' ');
@@ -86,3 +86,26 @@ export const validatePassword = (str: string): boolean => {
     validPassword.symbol = /^(?=.*[!.@#\$%\^&\*_\-=+])/.test(str);
     return validPassword.length && validPassword.capital && validPassword.number && validPassword.symbol;
 };
+
+/**
+ * Formatea una cadena de fecha y hora en un formato más legible.
+ *
+ * @param {string} value - La cadena de fecha y hora en formato ISO (ejemplo: "2024-06-06 14:34:57").
+ * @returns {string} - La fecha y hora formateadas en un formato legible (ejemplo: "6 de junio de 2024, 14:34").
+ */
+export function formatDateTime(value: string): string {
+    if (!value) return '';
+
+    const date = new Date(value);
+
+    // Formatear la fecha y hora manualmente
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    };
+
+    return date.toLocaleDateString('es-ES', options);
+}

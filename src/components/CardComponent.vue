@@ -12,7 +12,7 @@ const props = defineProps<{
 </script>
 
 <template>
-    <q-card :class="'q-pa-md q-mt-md bg-' + props.color" style="max-width: 280px">
+    <q-card :class="'q-pa-md q-mt-md bg-' + props.color" style="width: 250px">
         <q-card-section>
             <div class="text-h6">{{ props.title }}</div>
             <div class="text-subtitle1">{{ props.subtitle }}</div>

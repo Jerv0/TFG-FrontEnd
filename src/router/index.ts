@@ -40,6 +40,8 @@ export default route(function (/* { store, ssrContext } */) {
         } else if (data && data.usertype !== 'admin' && (to.path === '/ver/paciente' || to.path === '/ver/supervisor' || to.path === '/ver/candidatos' || to.path === '/candidaturas')) {
             toast('red', 'Ruta restringida');
             next({ name: data.usertype });
+        } else if (to.path === '/Login' && data) {
+            next({ name: data.usertype });
         } else {
             next();
         }

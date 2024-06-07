@@ -4,10 +4,12 @@ import { ref, onMounted, nextTick, watch, computed } from 'vue';
 import io from 'socket.io-client';
 import { store } from '../store/store';
 import toast from '../utils/formatNotify';
+import { formatDateTime } from '../utils/funcionesValidar';
 
 interface Message {
     user: string;
     message: string;
+    date: string;
 }
 
 interface Contact {
@@ -33,7 +35,7 @@ const toggleChat = () => (isChatVisible.value = !isChatVisible.value);
 
 onMounted(() => {
     userId.value = data.id_usuario;
-    socket = io(`http://${import.meta.env.VITE_RUTA}:3000`, { transports: ['websocket', 'polling', 'flashsocket'] });
+    socket = io(`https://${import.meta.env.VITE_RUTA}:3000`, { transports: ['websocket', 'polling', 'flashsocket'] });
 
     socket.on('partnerJoinedPrivateRoom', (partnerId: string) => {
         if (partnerId !== userId.value) {
@@ -84,7 +86,8 @@ const getMessagesForRoom = async (partnerId: string) => {
             response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=mensaje&id_sala=${userId.value}_${partnerId}`);
         }
 
-        messages.value = response.map((msg: any) => ({ user: msg.user_emisor, message: msg.message }));
+        //Aqui se añade si se necesitan mas campos del mensaje de la base de datos
+        messages.value = response.map((msg: any) => ({ user: msg.user_emisor, message: msg.message, date: formatDateTime(msg.sent_at) }));
     } catch (error) {
         console.error('Error fetching messages:', error);
     }
@@ -152,7 +155,7 @@ const getName = (id: string) => {
             <div v-if="partnerId" class="chat-section">
                 <h6>Conversación con {{ getName(partnerId) }}</h6>
                 <div class="chat-messages" ref="chatContainer" v-if="messages.length">
-                    <q-chat-message v-for="(message, index) in messages" :key="index" :text="[message.message]" :sent="message.user === userId" :name="getName(message.user)" />
+                    <q-chat-message v-for="(message, index) in messages" :key="index" :text="[message.message]" :sent="message.user === userId" :name="getName(message.user)" :stamp="message.date" />
                 </div>
                 <div v-else>
                     <h6 class="text-grey q-mt-md">Escribe tu primer mensaje a {{ getName(partnerId) }}!!</h6>
@@ -210,6 +213,8 @@ const getName = (id: string) => {
     background-color: var(--q-bg-page);
     background-color: var(--q-bg-page);
     color: var(--q-text-primary);
+
+    color: black;
 }
 
 .chat-container {
@@ -224,6 +229,7 @@ const getName = (id: string) => {
 .container-dark {
     background-color: #1c262b;
     box-shadow: 0 1px 5px rgb(117, 116, 116);
+    color: white;
 }
 
 .contacts-section,

@@ -6,7 +6,6 @@ import DarkModeComponent from '../components/DarkModeComponent.vue';
 import CloseSession from '../components/CloseSessionComponent.vue';
 import Chat from '../components/ChatComponent.vue';
 
-
 const TITLE = <string>process.env.APP_TITLE;
 const leftDrawerOpen = ref<boolean>(false); //CAMBIAR A FALSE UNA VEZ TERMINADO DE ARREGLAR ESTA PARTE
 
@@ -17,7 +16,7 @@ defineOptions({
     name: 'MainLayout',
 });
 
-const prueba: any = store.getCookie('userData') || null;
+const cookie: any = store.getCookie('userData') || null;
 </script>
 
 <template>
@@ -25,7 +24,7 @@ const prueba: any = store.getCookie('userData') || null;
         <q-toolbar class="q-pa-md justify-between">
             <q-toolbar-title class="text-center"> {{ TITLE }} </q-toolbar-title>
             <div class="row items-center justify-center offset-left">
-                <Chat/>
+                <Chat v-if="cookie" />
                 <DarkModeComponent />
                 <q-btn color="secondary" dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
             </div>
@@ -46,26 +45,24 @@ const prueba: any = store.getCookie('userData') || null;
 
         <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
             <!-- MENU PARA ADMIN O LO QUE SEA -->
-            <q-list padding v-if="prueba?.usertype === 'admin'">
+            <q-list padding v-if="cookie?.usertype === 'admin'">
                 <!-- Aqui tiene que cambiar el 1 por el propio perfil del admin -->
 
-                <q-item-label header> Informacion </q-item-label>
+                <q-item-label header> Información </q-item-label>
                 <q-item clickable v-ripple to="/admin" active-class="my-menu-link"><q-item-section> Inicio </q-item-section> </q-item>
                 <q-item clickable v-ripple to="/candidaturas" active-class="my-menu-link"><q-item-section> Candidatos </q-item-section> </q-item>
                 <q-item clickable v-ripple to="/ver/paciente" active-class="my-menu-link"><q-item-section> Pacientes </q-item-section> </q-item>
                 <q-item clickable v-ripple to="/ver/supervisor" active-class="my-menu-link"><q-item-section> Supervisor </q-item-section> </q-item>
             </q-list>
-            
+
             <q-separator spaced />
 
             <CloseSession v-if="store.getCookie('userData')" />
         </q-scroll-area>
-        
     </q-drawer>
 </template>
 
 <style scoped lang="scss">
-
 @import '../assets/variables.scss';
 .my-menu-link {
     color: white;
