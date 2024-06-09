@@ -1,18 +1,3 @@
-<template>
-  <div class="celda">
-    <p class="fecha">{{ props.valor }}</p>
-    <div class="tareas" v-for="(el, index) in tareasFiltradas" :key="index" :style="{ backgroundColor: randomColor() }">
-      <div class="tarea-header">
-        <p :class="['titulo', { done: tareasCompletadas[index] }]" @click="modificar(index)">{{ el.titulo }}</p>
-        <button class="buttonDone" @click="modificar(index)">
-          <img src="../../dist/spa/icons/done.png" />
-        </button>
-      </div>
-      <!-- <p :class="['descripcion', { done: tareasCompletadas[index] }]">{{ el.descripcion }}</p> -->
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { defineProps, computed, ref } from 'vue';
 
@@ -28,7 +13,6 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
 const tareasCompletadas = ref<boolean[]>([]);
 
 const colores = ['#EA77CD', '#3BDFB5', '#CF69EA', '#ED873B', '#EF4F42', '#EECC4E', '#70ED55', '#5FA0E9'];
@@ -49,6 +33,20 @@ const randomColor = () => {
 };
 </script>
 
+<template>
+  <div class="celda">
+    <p class="fecha">{{props.valor}}</p>
+    <div class="tareas" v-for="(el, index) in tareasFiltradas" :key="index" :style="{ backgroundColor: randomColor() }">
+      <div class="tarea-header">
+        <p :class="['titulo', { done: tareasCompletadas[index] }]" @click="modificar(index)">{{ el.titulo }}</p>
+        <button class="buttonDone" @click="modificar(index)">
+          <img src="../../dist/spa/icons/done.png" />
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
 <style scoped>
 p {
   font-size: 20px;
@@ -60,11 +58,16 @@ p {
   margin-top: 20px;
   color: white;
   font-size: 20px;
-  
+  border-radius: 10px;
+
 }
 
 .tareas .titulo {
   cursor: pointer; /* Cambia el cursor a mano cuando pasas por encima */
+}
+
+.tareas:hover {
+  box-shadow: 0 6px 12px rgba(223, 105, 129, 0.5);
 }
 
 .tarea-header {
@@ -101,5 +104,55 @@ button img {
 .cell input {
   width: 100%;
   box-sizing: border-box;
+}
+
+@media (max-width: 1050px){
+    .first-elements{
+        font-size: 10px;
+    }
+    .tareas{
+        padding: 2px;
+    }
+    button img {
+        width: 15px;
+        height: 15px;
+    }
+    .tareas p{
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 830px){
+    .first-elements{
+        font-size: 10px;
+    }
+
+    .first-elements p{
+        font-size: 15px;
+    }
+
+    .tareas{
+        border: none;
+        border-radius: 0px;
+    }
+
+    .tareas p {
+        font-size: 15px;
+    }
+
+    button img {
+        width: 15px;
+        height: 15px;
+    }
+
+    .buttonMas{
+      padding: 2px;
+    }
+
+    .buttonmodify{
+      margin-right: 10px;
+    }
+
+  
 }
 </style>

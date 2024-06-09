@@ -13,6 +13,8 @@ const router = useRouter();
 const email = ref<string>('paciente1@example.com');
 const password = ref<string>('pass1');
 
+
+
 const clearFields = () => {
     email.value = '';
     password.value = '';

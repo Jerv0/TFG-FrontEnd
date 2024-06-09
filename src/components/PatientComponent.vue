@@ -1,6 +1,5 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
-import ChatComponent from './ChatComponent.vue';
 import CalendarComponent from './CalendarComponent.vue';
 import DrawerAppBar from '../layouts/DrawerAppBar.vue';
 import { store } from '../store/store';
@@ -37,15 +36,15 @@ const cambiarMes = (incremento: number) => {
   }
 };
 
-
 </script>
 
 <template>
+ <DrawerAppBar/>
   <q-layout view="hHh lpR fFf">
-    <DrawerAppBar />
     <q-page-container>
-      <!-- <p>{{ "id paciente: " + data.id_usuario }}</p> -->
+      
       <div class="datos">
+       
         <div class="contain">
           <div class="select">
             <button class="flecha" @click="cambiarMes(-1)">←</button>
@@ -56,16 +55,14 @@ const cambiarMes = (incremento: number) => {
           </div>
         </div>
       </div>
-
       <CalendarComponent
         :mes="mes"
         :anio="anio"
         :id_usuario="data.id_usuario"
       />
-      <!-- Importar frases aleatorias -->
-      <ChatComponent />
+     
     </q-page-container>
-  </q-layout>
+  </q-layout>  
 </template>
 
 <style scoped>

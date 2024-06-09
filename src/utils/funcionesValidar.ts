@@ -86,3 +86,20 @@ export const validatePassword = (str: string): boolean => {
     validPassword.symbol = /^(?=.*[!.@#\$%\^&\*_\-=+])/.test(str);
     return validPassword.length && validPassword.capital && validPassword.number && validPassword.symbol;
 };
+
+export function formatDateTime(value: string): string {
+    if (!value) return '';
+
+    const date = new Date(value);
+
+    // Formatear la fecha y hora manualmente
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    };
+
+    return date.toLocaleDateString('es-ES', options);
+}

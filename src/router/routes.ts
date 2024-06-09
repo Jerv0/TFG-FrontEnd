@@ -22,9 +22,9 @@ const routes = [
         // children: [{ path: '/paciente', component: () => import('src/components/PatientComponent.vue') }]
     },
     {
-        name: 'hola',
-        path: '/conversacion/:id',
-        component: () => import('components/ConversationComponent.vue'),
+        name: 'chat',
+        path: '/chat',
+        component: () => import('components/ChatComponent.vue'),
     },
     {
         name: 'supervisor',
@@ -49,6 +49,11 @@ const routes = [
         name: 'modificarDatos',
         path: '/verDatos',
         component: () => import ('src/components/ModifyDataProfile.vue'),
+    },
+    {
+        name: 'motivacion',
+        path: '/motivacion',
+        component: () => import ('src/components/AleatoryPhrases.vue'),
     },
     {
         name: 'bloqueado',

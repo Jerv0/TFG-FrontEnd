@@ -3,6 +3,7 @@ import { computed, ref, onMounted } from 'vue';
 import axios from 'axios';
 import CellComponent from './CellComponent.vue';
 import toast from '../utils/formatNotify';
+import DrawerAppBar from '../layouts/DrawerAppBar.vue';
 
 // Interfaces para las propiedades y tareas
 interface Props {
@@ -102,6 +103,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <DrawerAppBar/>
   <table class="calendar">
     <thead>
       <tr>
@@ -111,7 +113,7 @@ onMounted(() => {
     <tbody>
       <tr v-for="i in ROWS" :key="i">
         <td v-for="j in COLS" :key="j" class="calendar-cell" :class="{ 'today': tablaMes[i - 1][j - 1] === diaHoy }">
-          <CellComponent v-if="tablaMes[i - 1][j - 1] !== '-'" :valor="tablaMes[i - 1][j - 1]" :tareas="tareas" />
+          <CellComponent v-if="tablaMes[i - 1][j -1] !== '-'" :valor="tablaMes[i - 1][j-1]" :tareas="tareas" />
         </td>
       </tr>
     </tbody>
@@ -131,15 +133,72 @@ onMounted(() => {
   padding: 8px;
 }
 
+.calendar-cell{
+  background-color: rgb(221, 225, 235);
+}
+
+.calendar-cell:hover {
+  background-color: #dbd9d9;
+}
+
 .calendar-cell {
-  height: 30px; /* Ajuste de la altura de las celdas */
+  height: 60px; /* Ajuste de la altura de las celdas */
 }
 
 .days{
-  background-color: #EFC08C;
+/*   background-color: #EFC08C; */
+background-color: rgb(94, 102, 182);
 }
 
 .today {
-  background-color: #df6981; /* Color para el día actual */
+  background-color: #a8b9ef; /* Color para el día actual */
+}
+
+@media (max-width: 1360px){
+  .calendar-table th {
+    width: calc(100% / 7); 
+    max-width: calc(100% / 7); 
+    font-size: 16px; 
+  }
+
+  .calendar-cell {
+    width: calc(100% / 7); 
+    max-width: calc(100% / 7); 
+    height: 80px; 
+    font-size: 14px; 
+  }
+
+}
+
+@media (max-width: 1287px){
+  .calendar-table th{
+      width: 250px;
+      max-width:150px;
+    }
+
+    .calendar-cell{
+      width: 250px; 
+      max-width: 150px;
+    }
+}
+
+@media(max-width: 1050px){
+  .calendar-table th{
+      max-width:25%;
+    }
+
+    .calendar-cell{
+      max-width: 25%;
+    } 
+}
+
+@media (max-width: 830px){
+  .calendar-table th{
+      max-width:115px;
+    }
+
+    .calendar-cell{
+      max-width: 117px;
+    } 
 }
 </style>
