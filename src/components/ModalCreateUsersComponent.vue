@@ -72,9 +72,6 @@ const onSubmit = async () => {
               }
             : null;
 
-    console.log(dataUser);
-    console.log(dataCustom);
-
     await store.axiosPost(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario`, dataUser);
     await store.axiosPost(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${form.value.usertype}`, dataCustom);
 

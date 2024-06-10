@@ -47,7 +47,7 @@ const routes = [
     {
         name: 'bloqueado',
         path: '/bloqueado',
-        component: () => import('components/ApplicantInfoComponent.vue'),
+        component: () => import('layouts/BlockPage.vue'),
     },
     // Always leave this as last one,
     // but you can also remove it
