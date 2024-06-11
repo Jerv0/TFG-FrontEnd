@@ -111,7 +111,6 @@ const scrollToBottom = () => {
         chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
     }
 };
-
 const filteredContacts = computed(() => {
     return contacts.value.filter((contact) => contact.nombre.toLowerCase().includes(searchQuery.value.toLowerCase()));
 });

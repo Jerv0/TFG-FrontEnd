@@ -28,7 +28,15 @@ const routes = [
     {
         name: 'supervisor',
         path: '/supervisor',
-        component: () => import('components/SupervisorComponent.vue'),
+        component: () => import('src/components/SupervisorComponent.vue'),
+    },
+    {
+        path: '/revisionTareas',
+        component: () => import('components/ReviewTareas.vue')
+    },
+    {
+        path: '/creacionTareas',
+        component: () => import('components/CreateTareas.vue')
     },
     {
         name: 'admin',
@@ -45,9 +53,14 @@ const routes = [
         component: () => import('components/ApplicantInfoComponent.vue'),
     },
     {
+        name: 'modificarDatos',
+        path: '/verDatos',
+        component: () => import ('src/components/ModifyDataProfile.vue'),
+    },
+    {
         name: 'bloqueado',
         path: '/bloqueado',
-        component: () => import('layouts/BlockPage.vue'),
+        component: () => import('components/ApplicantInfoComponent.vue'),
     },
     // Always leave this as last one,
     // but you can also remove it

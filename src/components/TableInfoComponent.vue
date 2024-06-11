@@ -21,14 +21,12 @@ const urlCustom = computed(() => {
 });
 
 
-
 const loadData = async () => {
     loading.value = true; // Marcamos que se están cargando los datos
     try {
         columns.value = [];
         data.value = [];
         const dataUsers = await store.axiosGetWithTimeout(urlUsers.value);
-
         const dataCustom = await store.axiosGetWithTimeout(urlCustom.value);
 
         const combinedData = [...dataUsers, ...dataCustom];
@@ -73,7 +71,6 @@ watchEffect(() => {
 </script>
 <template>
     <div class="q-pa-md">
-
         <q-table v-if="!loading" :rows="data" :columns="columns" row-key="id" class="my-sticky-last-column-table">
             <template v-slot:top>
                 <ModalCreate @userUpdated="loadData" />

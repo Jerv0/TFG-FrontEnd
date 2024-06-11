@@ -40,7 +40,6 @@ const loadData = async () => {
         data.value = data.value.filter((el: any) => el.activado);
         //Asi conseguimos quitar algun campo que no nos interese
         columns.value = columns.value.filter((el: any) => el.name !== 'activado');
-
         columns.value.push({ name: 'actions', align: 'center', label: 'Aceptar', field: 'actions' });
     } catch (err) {
         error.value = 'Error al obtener la información';
