@@ -1,55 +1,67 @@
-import { Component } from 'vue';
-
-/**representa la estructura de cada elemento de la ruta */
-interface routeElement {
-    path: string;
-    component: () => Component;
-    title?: string;
-    icon?: string;
-    children?: [{ path: string; component: () => Component }];
-}
-
-//https://m2.material.io/icons/ de aqui saco iconos
-
-/**todas las rutas de la aplicación: */
-const routes: routeElement[] = [
+//Rutas de la aplicacion
+const routes = [
     {
+        name: 'home',
         path: '/',
         component: () => import('components/MainPageComponent.vue'),
-        title: 'Main', /**titulo de la ruta */
-        icon: 'perm_identity',
     },
     {
+        name: 'register',
         path: '/register',
         component: () => import('components/FormComponent.vue'),
-        title: 'Register',
-        icon: 'calendar_today',
     },
     {
+        name: 'login',
         path: '/login',
         component: () => import('src/components/LoginComponent.vue'),
-        title: 'Login',
-        icon: 'account_circle',
     },
     {
-        path: '/paciente/:id', 
-        component: () => import('src/components/PatientComponent.vue'),
+        name: 'paciente',
+        path: '/paciente',
+        component: () => import ('src/components/PatientComponent.vue'),
+        // children: [{ path: '/paciente', component: () => import('src/components/PatientComponent.vue') }]
     },
     {
-        path: '/conversacion/id',
-        component: () => import('components/ConversationComponent.vue')
+        name: 'hola',
+        path: '/conversacion/:id',
+        component: () => import('components/ConversationComponent.vue'),
     },
     {
-        path: '/supervisor/id',
-        component: () => import('components/SupervisorComponent.vue')
+        name: 'supervisor',
+        path: '/supervisor',
+        component: () => import('src/components/SupervisorComponent.vue'),
     },
     {
-        path: '/supervisorCalendar',
-        component: () => import('components/SupervisorCalendar.vue')
+        path: '/revisionTareas',
+        component: () => import('components/ReviewTareas.vue')
     },
     {
-        path: '/admin/:id',
-        component: () => import('components/AdminComponent.vue')
+        path: '/creacionTareas',
+        component: () => import('components/CreateTareas.vue')
+    },
+    {
+        name: 'admin',
+        path: '/admin',
+        component: () => import('components/AdminComponent.vue'),
+    },
+    {
+        path: '/ver/:tipo(\\w+)',
+        component: () => import('layouts/ViewList.vue'),
+    },
+    {
+        name: 'candidatos',
+        path: '/candidaturas',
+        component: () => import('components/ApplicantInfoComponent.vue'),
+    },
+    {
+        name: 'modificarDatos',
+        path: '/verDatos',
+        component: () => import ('src/components/ModifyDataProfile.vue'),
+    },
+    {
+        name: 'bloqueado',
+        path: '/bloqueado',
+        component: () => import('components/ApplicantInfoComponent.vue'),
     },
     // Always leave this as last one,
     // but you can also remove it

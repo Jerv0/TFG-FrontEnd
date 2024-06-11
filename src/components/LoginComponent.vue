@@ -1,46 +1,111 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
+<!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
+import toast from '../utils/formatNotify';
+import { store } from '../store/store';
+
 import DrawerAppBar from '../layouts/DrawerAppBar.vue';
+
 const router = useRouter();
+const email = ref<string>('paciente1@example.com');
+const password = ref<string>('pass1');
 
-const email = ref<string>('');
-const password = ref<string>('');
+const clearFields = () => {
+    email.value = '';
+    password.value = '';
+};
 
-const Login = () => {
-    const data = {
-        email: email.value,
-        password: password.value,
-    };
-
-    /**esto es para imitar el sistema de autenticación hasta que lo arreglemos para que podamos ver las vistas. */
-    if (!email.value || !password.value) {
-        alert('rellene los datos correctamente');
-    } else if (email.value === 'paciente' && password.value === 'paciente') {
-        router.push('/paciente/id');
-    } else if (email.value === 'supervisor' && password.value === 'supervisor') {
-        router.push('/supervisor/id');
-    } else if (email.value === 'admin' && password.value === 'admin') {
-        router.push('/admin/id');
-    } else {
-        alert('email o contraseña incorrectos');
+const login = async () => {
+    try {
+        const response = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&email=${email.value}`);
+        console.log('responseee:', response.data.usuarios);
+        if (response.data.usuarios.length > 0 && response.data.usuarios[0].pass === password.value) {
+            store.addCookie('userData', response.data.usuarios[0]);
+           
+            const data: any = store.getCookie('userData');
+            if (data.usertype !== 'admin') {
+                const responseType = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${data.usertype}&id_usuario=${data.id_usuario}`);
+                store.addCookie('userDataCustom', responseType.data.usuarios[0]);
+            }
+            router.push(`/${data.usertype}`);
+        } else {
+            clearFields();
+            toast('error', 'Fallo de autentificación');
+        }
+    } catch (error) {
+        toast('error', 'Error de conexión');
     }
-    console.log(data);
 };
 </script>
 
 <template>
-    <div>
-        <q-layout view="hHh lpR fFf">
-            <q-page-container>
-                <DrawerAppBar ver="login" />
-                <q-input filled type="email" v-model="email" label="Email *" />
-                <q-input type="password" v-model="password" label=" Password *" />
-                <q-btn align="between" class="btn-fixed-width" color="accent" label="Iniciar sesión" @click="Login" />
-                <q-btn align="between" class="btn-fixed-width" color="accent" label="Cancelar" to="/" />
-            </q-page-container>
-        </q-layout>
-    </div>
+    <q-layout view="hHh lpR fFf">
+        <DrawerAppBar />
+        <q-page-container>
+            <q-page class="flex flex-center">
+                <div class="login-card q-pa-md q-gutter-md">
+                    <h2 class="text-center">Iniciar sesión</h2>
+                    <q-form @submit="login" @reset="clearFields" class="full-width">
+                        <q-input filled type="email" v-model="email" label="Email *" class="q-mt-md" />
+                        <q-input filled type="password" v-model="password" label="Password *" class="q-mt-md" />
+                        <div class="q-mt-md text-center">
+                            <q-btn type="submit" color="primary" label="Iniciar sesión" class="full-width" />
+                            <q-btn type="reset" color="secondary" label="Cancelar" to="/" class="full-width q-mt-sm" />
+                        </div>
+                    </q-form>
+                </div>
+            </q-page>
+        </q-page-container>
+    </q-layout>
 </template>
 
-<style scoped></style>
+<style scoped>
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 16px; /* Añadido padding para mejor centrado */
+    box-sizing: border-box; /* Asegura que el padding se incluya en el tamaño total */
+}
+
+.login-card {
+    max-width: 400px;
+    width: 100%;
+    padding: 24px; /* Aumentar el padding interno */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada */
+    border-radius: 12px; /* Bordes más redondeados */
+    border: 1px solid #ddd; /* Añadido el borde */
+    transition: transform 0.3s ease; /* Transición suave */
+    margin: 0 auto; /* Centrando la tarjeta horizontalmente */
+}
+
+.full-width {
+    width: 100%;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.q-mt-sm {
+    margin-top: 8px;
+}
+
+.q-mt-md {
+    margin-top: 16px;
+}
+
+.login-card h2 {
+    font-size: 1.5rem; /* Aumentar el tamaño del texto */
+    font-weight: bold; /* Hacer el texto más grueso */
+}
+
+.q-btn {
+    border-radius: 24px; /* Bordes redondeados en los botones */
+    font-size: 1rem; /* Aumentar tamaño del texto en los botones */
+}
+</style>

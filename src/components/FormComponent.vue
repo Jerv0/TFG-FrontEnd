@@ -58,7 +58,7 @@ const onRejected = () => toast('negative', 'archivo no valido');
     <q-layout view="hHh lpR fFf">
         <q-page-container>
             <div class="q-pa-md" style="max-width: 40%">
-                <DrawerAppBar ver="" />
+                <DrawerAppBar />
                 <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
                     <q-input filled v-model="name" label="Tu nombre *" hint="Nombre" :rules="[(val) => validateText(val) || 'Rellena correctamente']" />
                     <q-input filled v-model="surname" label="Apellidos *" hint="Apellidos" :rules="[(val) => validateText(val) || 'Rellena correctamente']" />
