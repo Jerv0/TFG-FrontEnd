@@ -1,182 +1,293 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
-import { useQuasar } from 'quasar';
-import { io, Socket } from 'socket.io-client';
-
-const $q = useQuasar();
-
-interface Contact {
-    id: number;
-    name: string;
-    messages: Message[];
-}
-
+import { ref, onMounted, nextTick, watch, computed } from 'vue';
+import io from 'socket.io-client';
+import { store } from '../store/store';
+import toast from '../utils/formatNotify';
+import { formatDateTime } from '../utils/funcionesValidar';
 
 interface Message {
-    id: string, text: string, sender: string
+    user: string;
+    message: string;
+    date: string;
 }
+
+interface Contact {
+    id_usuario: string;
+    nombre: string;
+    apellido: string;
+    usertype: string;
+}
+
+const userId = ref<string>('');
+const partnerId = ref<string>('');
+const messageInput = ref<string>('');
+const messages = ref<Message[]>([]);
+const contacts = ref<Contact[]>([]);
+const searchQuery = ref('');
+
+let socket: any;
+const data: any = store.getCookie('userData');
+const dataCustom: any = store.getCookie('userDataCustom');
+
 const isChatVisible = ref(false);
-const contacts = ref<Contact[]>([
-    {
-        id: 1,
-        name: 'John Doe',
-        messages: [
-            { id: '1', text: 'Have you seen Quasar?', sender: 'other' },
-            { id: '2', text: 'holaaa', sender: 'other' },
-        ],
-    },
-    { id: 2, name: 'Jane Smith', messages: [{ id: '3', text: 'Already building an app with it...', sender: 'other' }] },
-    // Otros contactos...
-]);
-
-const selectedContact = ref<Contact | null>(null);
-const newMessage = ref<string>('');
-
-const socket: Socket = io('http://18.214.47.239:3000', {
-    withCredentials: true,
-    extraHeaders: {
-        'Access-Control-Allow-Origin': 'http://18.214.47.239:9000', // El mismo origen permitido que en el servidor
-    },
-});
-const messagesContainer = ref<HTMLElement | null>(null);
-
 const toggleChat = () => (isChatVisible.value = !isChatVisible.value);
 
-const openConversation = (contact: Contact) => {
-    selectedContact.value = contact;
-    console.log('Abriendo conversación con:', contact.name);
+onMounted(() => {
+    userId.value = data.id_usuario;
+    socket = io(`https://${import.meta.env.VITE_RUTA}:3000`, { transports: ['websocket', 'polling', 'flashsocket'] });
+
+    socket.on('partnerJoinedPrivateRoom', (partnerId: string) => {
+        if (partnerId !== userId.value) {
+            const partnerName = contacts.value.find((contact) => contact.id_usuario === partnerId)?.nombre;
+            if (partnerName) {
+                toast('success', `${partnerName} ha entrado al chat.`);
+                console.log(`(${partnerId}) se ha unido a la sala privada.`);
+            }
+        }
+    });
+
+    socket.on('messageFromPrivateRoom', (message: Message) => {
+        if (message.user === partnerId.value) {
+            const senderName = contacts.value.find((contact) => contact.id_usuario === message.user)?.nombre;
+            toast('info', `Nuevo mensaje de ${senderName}`);
+        }
+        messages.value.push(message);
+    });
+    socket.emit('registerUser', userId.value);
+    getContacts();
+});
+
+const getContacts = async () => {
+    let response;
+    if (data.usertype === 'paciente') {
+        response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id_usuario=${dataCustom.id_supervisor}`);
+    } else {
+        //Para que entre en supervisor y admin y tengan todos los contactos
+        response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario`);
+    }
+    contacts.value = response.filter((el: any) => el.username !== data.username);
 };
 
-const generateMessageId = () => {
-    return Math.random().toString(36).substr(2, 9);
+const selectPartner = (receiver: string) => {
+    partnerId.value = receiver;
+    socket.emit('joinPrivateRoom', userId.value, partnerId.value);
+    // Retrieve messages for the selected room
+    getMessagesForRoom(receiver);
 };
+
+const getMessagesForRoom = async (partnerId: string) => {
+    try {
+        let response;
+        response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=mensaje&id_sala=${partnerId}_${userId.value}`);
+        //esto es raro pero es la primera solucion que se me ha venido a la mente , lo que hago es que como se revierte el partner_id
+        //y el userId , si no devuelve nada , lo revierto para que si encuentre la sala en la base de datos
+        if (response.length === 0) {
+            response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=mensaje&id_sala=${userId.value}_${partnerId}`);
+        }
+
+        //Aqui se añade si se necesitan mas campos del mensaje de la base de datos
+        messages.value = response.map((msg: any) => ({ user: msg.user_emisor, message: msg.message, date: formatDateTime(msg.sent_at) }));
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+    }
+};
+
+const chatContainer = ref<HTMLDivElement | null>(null);
 
 const sendMessage = async () => {
-    if (newMessage.value.trim() !== '' && selectedContact.value) {
-        const messageId = generateMessageId();
-        const message : Message = { id: messageId, text: newMessage.value, sender: 'me' };
-        socket.emit('chat message', message);
-        selectedContact.value.messages.push(message);
-        newMessage.value = '';
-        await nextTick();
-        scrollToBottom();
-    }
+    if (!messageInput.value.trim()) return;
+    const partnerIdValue = partnerId.value;
+    socket.emit('sendMessageToPrivateRoom', userId.value, partnerIdValue, messageInput.value);
+    messageInput.value = '';
+    // Wait for Vue to render the new message
+    await nextTick();
+    scrollToBottom();
 };
 
 const scrollToBottom = () => {
-    if (messagesContainer.value) {
-        messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+    // Scroll to bottom of the chat container
+    if (chatContainer.value) {
+        chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
     }
 };
 
-onMounted(() => {
-    socket.on('chat message', async (msg: { id: string; text: string; sender: 'me' | 'other' }) => {
-        if (selectedContact.value && !selectedContact.value.messages.find((m) => m.id === msg.id)) {
-            selectedContact.value.messages.push({ ...msg, sender: 'other' });
-            await nextTick();
-            scrollToBottom();
-        }
-    });
+const filteredContacts = computed(() => {
+    return contacts.value.filter((contact) => contact.nombre.toLowerCase().includes(searchQuery.value.toLowerCase()));
 });
 
-onBeforeUnmount(() => {
-    console.log('me cierro');
-    socket.disconnect();
-});
+watch(
+    messages,
+    async () => {
+        await nextTick();
+        scrollToBottom();
+    },
+    { deep: true }
+);
 
-watch(selectedContact, async () => {
-    await nextTick();
-    scrollToBottom();
-});
+const getName = (id: string) => {
+    return userId.value === id ? 'Yo' : contacts.value.find((contact) => contact.id_usuario === id)?.nombre;
+};
 </script>
 
 <template>
-    <q-btn align="between" class="btn-fixed-width" color="accent" label="Chat" @click="toggleChat" />
+    <q-btn class="btn-fixed" color="secondary" icon="chat" @click="toggleChat" />
 
-    <div v-if="isChatVisible" class="q-pa-md row justify-center absolute-bottom-right container" :class="{ 'container-dark': $q.dark.isActive }">
-        <div class="row justify-end">
-            <q-btn class="btn-fixed-width static" color="accent" label="x" @click="toggleChat" />
-        </div>
-        <div class="col-3 loop float-left">
-            <q-list>
-                <q-item v-for="contact in contacts" :key="contact.id" clickable @click="openConversation(contact)" class="contact">
-                    <q-item-section>
-                        <q-item-label>{{ contact.name }}</q-item-label>
-                    </q-item-section>
-                </q-item>
-            </q-list>
-        </div>
-
-        <div v-if="selectedContact" class="col chat q-gutter-x-md">
-            <div ref="messagesContainer" class="messages-container">
-                <q-chat-message v-for="message in selectedContact.messages" :key="message.id" :text="[message.text]" :sent="message.sender === 'me'" text-color="white" bg-color="primary" class="q-mb-sm">
-                    <template v-slot:name>{{ message.sender === 'me' ? 'me' : selectedContact.name }}</template>
-                    <template v-slot:stamp>7 minutes ago</template>
-                    <template v-slot:avatar>
-                        <img class="q-message-avatar q-message-avatar--sent" src="https://cdn.quasar.dev/img/avatar4.jpg" v-if="message.sender === 'me'" />
-                        <img class="q-message-avatar q-message-avatar--received" src="https://cdn.quasar.dev/img/avatar1.jpg" v-else />
-                    </template>
-                </q-chat-message>
+    <div v-if="isChatVisible" class="chat-wrapper">
+        <div class="chat-container" :class="{ 'container-dark': $q.dark.isActive }">
+            <div class="contacts-section">
+                <q-btn class="btn-cerrar" color="accent" label="X" @click="toggleChat" />
+                <q-input class="input" type="text" v-model="searchQuery" placeholder="Buscar contactos" v-if="data.usertype !== 'paciente'" />
+                <div class="contacts-list" v-if="contacts.length">
+                    <q-list>
+                        <q-item v-for="contact in filteredContacts" :key="contact.id_usuario" clickable @click="selectPartner(contact.id_usuario)" :class="{ 'selected-contact': contact.id_usuario === partnerId }">
+                            <q-item-section>
+                                {{ contact.nombre }} {{ contact.apellido }} <b>({{ contact.usertype }})</b>
+                            </q-item-section>
+                        </q-item>
+                    </q-list>
+                </div>
+                <div v-else>
+                    <p>No hay contactos disponibles.</p>
+                </div>
             </div>
 
-            <div class="input-container">
-                <q-input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Escribe un mensaje..." />
-                <q-btn color="primary" @click="sendMessage">Enviar</q-btn>
+            <div v-if="partnerId" class="chat-section">
+                <h6>Conversación con {{ getName(partnerId) }}</h6>
+                <div class="chat-messages" ref="chatContainer" v-if="messages.length">
+                    <q-chat-message v-for="(message, index) in messages" :key="index" :text="[message.message]" :sent="message.user === userId" :name="getName(message.user)" :stamp="message.date" />
+                </div>
+                <div v-else>
+                    <h6 class="text-grey q-mt-md">Escribe tu primer mensaje a {{ getName(partnerId) }}!!</h6>
+                </div>
+
+                <div class="send-message-section">
+                    <q-input v-model="messageInput" filled placeholder="Escribe un mensaje" @keyup.enter="sendMessage" />
+                    <q-btn @click="sendMessage" color="primary" class="send-button">Enviar</q-btn>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
-<style scoped>
-.static {
-    position: absolute;
-    top: 5px;
-    right: 5px;
+<style scoped lang="scss">
+/* Estilo de las barras  */
+@import '../assets/variables.scss';
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
 }
-.my-emoji {
-    vertical-align: middle;
-    height: 2em;
-    width: 2em;
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
 }
-.loop {
-    height: 100%;
-    overflow-y: auto;
-    border-right: 1px solid #ccc;
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: $secondary;
+    border-radius: 10px;
 }
-.container {
-    width: 450px;
-    height: 400px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    z-index: 9999;
-    display: flex;
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: $secondary;
+}
+
+.selected-contact {
+    background-color: $secondary;
+}
+.input {
+    padding: 5px;
+}
+
+.chat-wrapper {
+    width: 100%;
+    max-width: 600px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2000;
+    background-color: var(--q-bg-page);
+    background-color: var(--q-bg-page);
+    color: var(--q-text-primary);
+
+    color: black;
+}
+
+.chat-container {
     background-color: white;
-}
-.container-dark {
-    background-color: #1d1d1d;
-}
-.chat {
-    height: 100%;
-    overflow-y: auto;
+    width: 100%;
     display: flex;
     flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgb(117, 116, 116);
+    z-index: 2000;
 }
-.contact {
-    border-bottom: 1px solid #ccc;
+.container-dark {
+    background-color: #1c262b;
+    box-shadow: 0 1px 5px rgb(117, 116, 116);
+    color: white;
 }
-.messages-container {
-    flex: 1;
+
+.contacts-section,
+.chat-section {
+    width: 100%;
+    max-width: 70%;
+    margin: 0 auto;
+}
+
+.contacts-list {
+    max-height: 400px;
     overflow-y: auto;
-    padding-bottom: 60px; /* Altura del input-container */
 }
-.input-container {
+
+.chat-messages {
+    max-height: 350px;
+    overflow-x: hidden;
+    padding: 20px;
+}
+
+.send-message-section {
     display: flex;
     align-items: center;
-    padding: 10px;
-    background: #f9f9f9;
-    border-top: 1px solid #ccc;
-    position: sticky;
-    bottom: 0;
-    width: 100%;
+    gap: 8px;
+}
+
+.send-button {
+    margin-left: 8px;
+}
+
+.btn-fixed-width {
+    width: 100px;
+    position: fixed;
+    z-index: 2001; /* Ensure button is above other elements */
+}
+
+.send-message-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+    margin-right: 7px;
+    .q-input {
+        flex-grow: 1;
+    }
+    .send-button {
+        padding: 10px 20px;
+    }
+}
+@media (min-width: 600px) {
+    .chat-container {
+        flex-direction: row;
+    }
+    .contacts-section {
+        max-width: 30%;
+    }
+    .chat-section {
+        max-width: 70%;
+    }
 }
 </style>

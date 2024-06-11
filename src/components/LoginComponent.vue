@@ -19,11 +19,15 @@ const clearFields = () => {
 
 const login = async () => {
     try {
-        const response = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?email=${email.value}`);
+        const response = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&email=${email.value}`);
 
-        if (response.data.usuarios.length > 0) {
+        if (response.data.usuarios.length > 0 && response.data.usuarios[0].pass === password.value && response.data.usuarios[0].email === email.value) {
             store.addCookie('userData', response.data.usuarios[0]);
             const data: any = store.getCookie('userData');
+            if (data.usertype !== 'admin') {
+                const responseType = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${data.usertype}&id_usuario=${data.id_usuario}`);
+                store.addCookie('userDataCustom', responseType.data.usuarios[0]);
+            }
             router.push(`/${data.usertype}`);
         } else {
             clearFields();
@@ -42,12 +46,14 @@ const login = async () => {
             <q-page class="flex flex-center">
                 <div class="login-card q-pa-md q-gutter-md">
                     <h2 class="text-center">Iniciar sesión</h2>
-                    <q-input filled type="email" v-model="email" label="Email *" />
-                    <q-input filled type="password" v-model="password" label="Password *" />
-                    <div class="q-mt-md text-center">
-                        <q-btn color="primary" label="Iniciar sesión" @click="login" class="full-width" />
-                        <q-btn color="secondary" label="Cancelar" to="/" class="full-width q-mt-sm" />
-                    </div>
+                    <q-form @submit="login" @reset="clearFields" class="full-width">
+                        <q-input filled type="email" v-model="email" label="Email *" class="q-mt-md" />
+                        <q-input filled type="password" v-model="password" label="Password *" class="q-mt-md" />
+                        <div class="q-mt-md text-center">
+                            <q-btn type="submit" color="primary" label="Iniciar sesión" class="full-width" />
+                            <q-btn type="reset" color="secondary" label="Cancelar" to="/" class="full-width q-mt-sm" />
+                        </div>
+                    </q-form>
                 </div>
             </q-page>
         </q-page-container>

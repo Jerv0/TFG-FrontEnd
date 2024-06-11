@@ -1,18 +1,25 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import toast from '../utils/formatNotify';
 import axios from 'axios';
+import { store } from '../store/store';
 import { validatePassword, validPassword } from '../utils/funcionesValidar';
-const passwordConfirm = ref<string>('');
-const emit = defineEmits(['userUpdated']);
 
+const emit = defineEmits(['userUpdated']);
+const supervisorOptions = ref<any[]>([]);
+
+const activadoOptions = [
+    { label: 'Si', value: '1' },
+    { label: 'No', value: '0' },
+];
 const props = defineProps<{
     row: {
-        id: string;
+        id_usuario: string;
         username: string;
         pass: string;
-        mail: string;
+        email: string;
         dni: string;
         nombre: string;
         apellido: string;
@@ -26,17 +33,19 @@ const props = defineProps<{
         especialidad_requerida: string;
         medicamentos: string;
         alergias: string;
+        id_supervisor: any;
 
         disponibilidad: string;
         titulacion: string;
         salario: string;
+        activado: any;
     };
     type: string;
 }>();
 
 const open = ref(false);
 const form = ref({ ...props.row });
-
+const passwordConfirm = ref<string>(form.value.pass);
 const openModal = () => {
     form.value = { ...props.row };
     open.value = true;
@@ -44,48 +53,70 @@ const openModal = () => {
 
 const onSubmit = async () => {
     try {
-        toast('positive', 'Usuario actualizado');
-        //Formateamos los objetos para hacer los put a las dos tablas
         const dataUser = {
+            id_usuario: form.value.id_usuario,
             username: form.value.username,
             pass: form.value.pass,
-            mail: form.value.mail,
+            email: form.value.email,
             dni: form.value.dni,
             nombre: form.value.nombre,
             apellido: form.value.apellido,
             token: form.value.token,
             dir: form.value.dir,
             tel: form.value.tel,
-            fecha_creacion: form.value.fecha_creacion,
             usertype: form.value.usertype,
         };
         const dataCustom =
             props.type === 'paciente'
                 ? {
+                      id_usuario: form.value.id_usuario,
                       contact_emerg: form.value.contact_emerg,
                       especialidad_requerida: form.value.especialidad_requerida,
                       medicamentos: form.value.medicamentos,
                       alergias: form.value.alergias,
+                      id_supervisor: form.value.id_supervisor.value,
                   }
                 : props.type === 'supervisor'
                 ? {
+                      id_usuario: form.value.id_usuario,
                       disponibilidad: form.value.disponibilidad,
                       titulacion: form.value.titulacion,
                       salario: form.value.salario,
+                      activado: form.value.activado.value,
                   }
                 : null;
 
-        console.log(dataCustom);
-
-        await axios.put(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?id="${props.row.id}"`, dataUser);
-        await axios.put(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/pacienteJavi?id="${props.row.id}"`, dataCustom);
+        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&id_usuario=${props.row.id_usuario}`, dataUser);
+        await store.axiosPut(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${props.type}&id_usuario=${props.row.id_usuario}`, dataCustom);
+        toast('positive', 'Usuario actualizado');
         emit('userUpdated');
         open.value = false;
     } catch (e) {
         console.log(e);
     }
 };
+
+const fetchSupervisors = async () => {
+    try {
+        const response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&usertype=supervisor`);
+        const responseCustom = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=supervisor&activado=1`);
+
+        const filteredResponse = response.filter((el: any) => {
+            return responseCustom.some((customEl: any) => customEl.id_usuario === el.id_usuario);
+        });
+
+        supervisorOptions.value = filteredResponse.map((user: any) => ({
+            label: user.nombre + ' ' + user.apellido,
+            value: user.id_usuario,
+        }));
+    } catch (error) {
+        console.error('Error fetching supervisors:', error);
+    }
+};
+
+onMounted(fetchSupervisors);
 </script>
+
 <template>
     <div class="q-pa-md q-gutter-sm">
         <q-btn icon="edit" color="primary" @click="openModal" />
@@ -99,9 +130,9 @@ const onSubmit = async () => {
                 <q-form @submit.prevent="onSubmit" class="q-gutter-md q-pa-md">
                     <div>
                         <div class="row q-col-gutter-md">
-                            <q-input v-model="form.id" label="ID" disable filled class="col-6" />
+                            <q-input v-model="form.id_usuario" label="ID" disable filled class="col-6" />
                             <q-input v-model="form.username" label="Username" filled class="col-6" />
-                            <q-input v-model="form.mail" label="Email" type="email" filled class="col-6" />
+                            <q-input v-model="form.email" label="Email" type="email" filled class="col-6" />
                             <q-input v-model="form.dni" label="DNI" filled class="col-6" />
                             <q-input v-model="form.nombre" label="Nombre" filled class="col-6" />
                             <q-input v-model="form.apellido" label="Apellido" filled class="col-6" />
@@ -129,6 +160,7 @@ const onSubmit = async () => {
                             <q-input v-model="form.especialidad_requerida" label="Especialidad Requerida" filled class="col-6" />
                             <q-input v-model="form.medicamentos" label="Medicamentos" filled class="col-6" />
                             <q-input v-model="form.alergias" label="Alergias" filled class="col-6" />
+                            <q-select required v-model="form.id_supervisor" :options="supervisorOptions" label="Seleccione un supervisor" filled class="col-6" selected />
                         </div>
                     </div>
 
@@ -137,6 +169,7 @@ const onSubmit = async () => {
                             <q-input v-model="form.disponibilidad" label="Disponibilidad" filled class="col-6" />
                             <q-input v-model="form.titulacion" label="Titulacion" filled class="col-6" />
                             <q-input v-model="form.salario" label="Salario" filled class="col-6" />
+                            <q-select required v-model="form.activado" :options="activadoOptions" label="Activado" filled class="col-6" selected />
                         </div>
                     </div>
                     <div class="row justify-end q-gutter-sm q-mt-md">

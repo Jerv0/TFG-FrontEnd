@@ -1,25 +1,34 @@
+<!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
+import { ref, onMounted, watch } from 'vue';
+import { store } from '../store/store';
 import CardComponent from './CardComponent.vue';
 import DrawerAppBar from '../layouts/DrawerAppBar.vue';
-// import ChatComponent from './ChatComponent.vue';
-import axios from 'axios';
-import { onMounted, ref } from 'vue';
-import logoutButton from './CloseSessionComponent.vue';
+import ChatComponent from './ChatComponent.vue';
+import CloseSession from './CloseSessionComponent.vue';
+const urls = [
+    `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}`,
+    `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=paciente`,
+    `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=supervisor&activado=0`,
+    `https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=supervisor&activado=1`,
+];
 
-const count = ref<number | null>(null);
+const datosCards = ref([
+    { title: 'Usuarios', subtitle: 'Total de usuarios', count: 0, color: 'primary', url: '' },
+    { title: 'Pacientes', subtitle: 'Total de pacientes', count: 0, color: 'secondary', url: 'ver/paciente' },
+    { title: 'Candidatos', subtitle: 'Total de candidatos', count: 0, color: 'primary', url: 'candidaturas' },
+    { title: 'Supervisores', subtitle: 'Total de supervisores', count: 0, color: 'secondary', url: 'ver/supervisor' },
+]);
 
-const usersCount = async () => {
-    try {
-        const response = await axios.get(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi?`);
-        count.value = response.data.usuarios.length;
-    } catch (e) {
-        console.log(e);
-    }
+const fillCards = async () => {
+    await Promise.all(
+        datosCards.value.map(async (el, index) => {
+            el.count = await store.fetchCount(urls[index]);
+        })
+    );
 };
 
-onMounted(() => {
-    usersCount();
-});
+fillCards();
 </script>
 
 <template>
@@ -27,11 +36,15 @@ onMounted(() => {
         <DrawerAppBar />
         <q-page-container>
             <q-page class="q-pa-md">
-                <logoutButton class="q-mb-md" />
+                <!-- <CloseSession /> -->
                 <!-- <ChatComponent /> -->
-                <div class="row q-col-gutter-md">
-                    <div class="col-12 col-md-6 col-lg-4 q-mb-md">
-                        <CardComponent title="Usuarios" subtitle="Total de usuarios" :count="count" color="pink-8" />
+                
+                <div class="row q-gutter-md">
+                    <!-- Sección de tarjetas de información -->
+                    <div class="col-12 col-md-6 col-lg-8">
+                        <div class="row q-gutter-md">
+                            <CardComponent v-for="card in datosCards" :key="card.title" :title="card.title" :subtitle="card.subtitle" :count="card.count" :url="card.url" :color="card.color" />
+                        </div>
                     </div>
                 </div>
             </q-page>
@@ -40,47 +53,31 @@ onMounted(() => {
 </template>
 
 <style scoped>
-:root {
-    --bg: #fff;
-    --color: #333333;
-}
-
-html.dark-mode {
-    --bg: #232b32;
-    --color: #ddd8ca;
-}
-
 body {
     background-color: var(--bg);
     color: var(--color);
-    transition: background-color 0.3s, color 0.3s; /* Transición suave para los cambios de tema */
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Clases de utilidad para bordes redondeados y sombras */
-.rounded-borders {
-    border-radius: 8px;
-}
-
-.shadow-2 {
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Aseguramos que el contenedor de la tarjeta esté bien espaciado y centrado */
 .row {
+    margin-top: 2px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    gap: 16px; /* Improved spacing between elements */
 }
 
 .col-12 {
-    padding: 16px;
+    flex: 1 0 100%;
 }
 
-.bg-white {
-    background-color: var(--bg);
+.col-md-6 {
+    flex: 0 0 48%;
+    max-width: 48%;
 }
 
-.text-center {
-    text-align: center;
+.col-lg-4 {
+    flex: 0 0 32%;
+    max-width: 32%;
 }
 </style>

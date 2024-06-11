@@ -2,7 +2,7 @@
   "name": "tfg-proyecto",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "App",
+  "productName": "Aplicacion Dependiente",
   "author": "Jerv0 <ruizmartinezjavier99@gmail.com>",
   "private": true,
   "scripts": {
@@ -10,9 +10,11 @@
     "format": "prettier --write \"**/*.{js,ts,vue,css,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
-    "build": "quasar build"
+    "build": "quasar build",
+    "deploy": "gh-pages -d dist/spa"
   },
   "dependencies": {
+    "@capacitor/android": "^6.0.0",
     "@quasar/extras": "^1.16.4",
     "axios": "^1.7.0",
     "dotenv": "^16.4.5",
@@ -22,10 +24,11 @@
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
     "vue": "^3.4.21",
-    "vue3-cookies": "^1.0.6",
-    "vue-router": "^4.3.2"
+    "vue-router": "^4.3.2",
+    "vue3-cookies": "^1.0.6"
   },
   "devDependencies": {
+    "@capacitor/cli": "^6.0.0",
     "@quasar/app": "^3.3.3",
     "@quasar/app-vite": "^1.8.0",
     "@quasar/quasar-app-extension-dotenv": "^1.1.0",
@@ -39,6 +42,7 @@
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^9.0.0",
+    "gh-pages": "^6.1.1",
     "prettier": "^2.5.1",
     "ts-node": "^10.9.2",
     "typescript": "^4.9.5",

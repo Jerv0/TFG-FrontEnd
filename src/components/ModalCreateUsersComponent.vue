@@ -1,12 +1,15 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import toast from '../utils/formatNotify';
-import axios from 'axios';
+import { store } from '../store/store';
 import { uid } from 'quasar';
 import { validateEmail, validateText, validatePassword, validPassword } from '../utils/funcionesValidar';
 const emit = defineEmits(['userUpdated']);
 const passwordConfirm = ref<string>('');
+const supervisorOptions = ref<any[]>([]);
+
 const form = ref({
     username: '',
     pass: '',
@@ -22,6 +25,7 @@ const form = ref({
     especialidad_requerida: '',
     medicamentos: '',
     alergias: '',
+    id_supervisor: { value: '', label: '' },
 
     disponibilidad: '',
     titulacion: '',
@@ -36,12 +40,13 @@ const openModal = () => {
 
 const onSubmit = async () => {
     const dataUser = {
-        id: uid(),
+        id_usuario: uid(),
         username: form.value.username,
         pass: form.value.pass,
-        mail: form.value.mail,
+        email: form.value.mail,
         dni: form.value.dni,
         nombre: form.value.nombre,
+        token: '',
         apellido: form.value.apellido,
         dir: form.value.dir,
         tel: form.value.tel,
@@ -51,26 +56,24 @@ const onSubmit = async () => {
     const dataCustom =
         form.value.usertype === 'paciente'
             ? {
-                  id: dataUser.id,
+                  id_usuario: dataUser.id_usuario,
                   contact_emerg: form.value.contact_emerg,
                   especialidad_requerida: form.value.especialidad_requerida,
                   medicamentos: form.value.medicamentos,
                   alergias: form.value.alergias,
+                  id_supervisor: form.value.id_supervisor.value,
               }
             : form.value.usertype === 'supervisor'
             ? {
-                  id: dataUser.id,
+                  id_usuario: dataUser.id_usuario,
                   disponibilidad: form.value.disponibilidad,
                   titulacion: form.value.titulacion,
                   salario: form.value.salario,
               }
             : null;
 
-    console.log(dataUser);
-    console.log(dataCustom);
-
-    await axios.post(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/userJavi`, dataUser);
-    await axios.post(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}/pacienteJavi`, dataCustom);
+    await store.axiosPost(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario`, dataUser);
+    await store.axiosPost(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=${form.value.usertype}`, dataCustom);
 
     emit('userUpdated');
     toast('positive', 'Usuario Creado');
@@ -94,12 +97,38 @@ const clearFields = () => {
         especialidad_requerida: '',
         medicamentos: '',
         alergias: '',
+        id_supervisor: { value: '', label: '' },
 
         disponibilidad: '',
         titulacion: '',
         salario: '',
     };
 };
+
+const fetchSupervisors = async () => {
+    try {
+        const response = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=usuario&usertype=supervisor`);
+        const responseCustom = await store.axiosGet(`https://${import.meta.env.VITE_RUTA}/${import.meta.env.VITE_BACKEND}?table=supervisor&activado=1`);
+
+        /**
+         * SOME es un método en JavaScript que verifica si al menos un elemento en un array cumple con una condición proporcionada
+         * por una función de prueba. La función some() devuelve true si al menos un elemento del array satisface la condición de la
+         * función de prueba, y false si ningún elemento lo hace.
+         */
+        const filteredResponse = response.filter((el: any) => {
+            return responseCustom.some((customEl: any) => customEl.id_usuario === el.id_usuario);
+        });
+
+        supervisorOptions.value = filteredResponse.map((user: any) => ({
+            label: user.nombre + ' ' + user.apellido,
+            value: user.id_usuario,
+        }));
+    } catch (error) {
+        console.error('Error fetching supervisors:', error);
+    }
+};
+
+onMounted(fetchSupervisors);
 </script>
 
 <template>
@@ -143,6 +172,7 @@ const clearFields = () => {
                             <q-input v-model="form.especialidad_requerida" label="Especialidad Requerida" filled class="col-6" :rules="[(val) => validateText(val) || 'Rellena correctamente']" />
                             <q-input v-model="form.medicamentos" label="Medicamentos" filled class="col-6" :rules="[(val) => validateText(val) || 'Rellena correctamente']" />
                             <q-input v-model="form.alergias" label="Alergias" filled class="col-6" :rules="[(val) => validateText(val) || 'Rellena correctamente']" />
+                            <q-select v-model="form.id_supervisor" :options="supervisorOptions" label="Seleccione un supervisor" filled class="col-6" selected />
                         </div>
                     </div>
 

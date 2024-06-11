@@ -39,6 +39,16 @@ const routes = [
         path: '/ver/:tipo(\\w+)',
         component: () => import('layouts/ViewList.vue'),
     },
+    {
+        name: 'candidatos',
+        path: '/candidaturas',
+        component: () => import('components/ApplicantInfoComponent.vue'),
+    },
+    {
+        name: 'bloqueado',
+        path: '/bloqueado',
+        component: () => import('layouts/BlockPage.vue'),
+    },
     // Always leave this as last one,
     // but you can also remove it
     {

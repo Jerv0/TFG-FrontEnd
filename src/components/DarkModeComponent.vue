@@ -20,7 +20,7 @@ onMounted(() => {
 });
 </script>
 <template>
-    <q-icon :name="isDark ? 'brightness_3' : 'wb_sunny'" @click="toggleDarkMode" class="cursor-pointer" :color="isDark ? 'white' : 'yellow'" style="font-size: 24px" />
+    <q-icon :name="isDark ? 'brightness_3' : 'wb_sunny'" @click="toggleDarkMode" class="cursor-pointer q-ml-md q-mr-md" :color="isDark ? 'white' : 'yellow'" style="font-size: 24px" />
 </template>
 
 <style lang="sass" scoped></style>

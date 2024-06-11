@@ -31,22 +31,23 @@ export default route(function (/* { store, ssrContext } */) {
     //Aqui checkear la autentificacion
     Router.beforeEach((to, from, next) => {
         const data: any = store.getCookie('userData');
+        const dataCustom: any = store.getCookie('userDataCustom');
         console.log('Navegando a:', to.path);
         console.log('Viniendo de:', from.path);
-
-        if (to.path === '/admin' && data && data.usertype !== 'admin') {
-            toast('error', 'Ruta restringida');
+        if (dataCustom && dataCustom.activado === '0' && to.name !== 'bloqueado') {
+            next({ name: 'bloqueado' });
+        } else if (to.path === '/admin' && data.usertype !== 'admin') {
+            toast('red', 'Ruta restringida');
             next({ name: 'home' });
-        } else if (to.path.startsWith('/ver')) {
-            if ((data && data.usertype !== 'admin' && to.path !== '/ver/paciente') || to.path !== '/ver/supervisor') {
-                toast('error', 'Ruta restringida');
-                next({ name: 'home' });
-            } else {
-                next();
-            }
+        } else if (data && data.usertype !== 'admin' && ['/ver/paciente', '/ver/supervisor', '/ver/candidatos', '/candidaturas'].includes(to.path)) {
+            toast('red', 'Ruta restringida');
+            next({ name: data.usertype });
+        } else if (to.path === '/Login' && data) {
+            next({ name: data.usertype });
         } else {
             next();
         }
     });
+
     return Router;
 });
