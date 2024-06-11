@@ -1,3 +1,4 @@
+<!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 
 <script setup lang="ts">
@@ -17,7 +18,7 @@ defineOptions({
     name: 'MainLayout',
 });
 
-const prueba: any = store.getCookie('userData') || null;
+const cookie: any = store.getCookie('userData') || null;
 
 const route = useRoute();
 const currentRoute = ref(route.fullPath);
@@ -25,13 +26,13 @@ const currentRoute = ref(route.fullPath);
 
 <template>
     <q-header elevated>
-        <q-toolbar>
-            <q-toolbar-title> {{ TITLE }} </q-toolbar-title>
-            <DarkModeComponent />
-            <!--   {{ store }}
-      {{ store.getCookie("userData") }}
-      {{ store.getCookie("userDataCustom") }} -->
-            <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <q-toolbar class="q-pa-md justify-between">
+            <q-toolbar-title class="text-center"> {{ TITLE }} </q-toolbar-title>
+            <div class="row items-center justify-center offset-left">
+                <Chat v-if="cookie" />
+                <DarkModeComponent />
+                <q-btn color="secondary" dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+            </div>
         </q-toolbar>
     </q-header>
 
@@ -42,14 +43,14 @@ const currentRoute = ref(route.fullPath);
                 <q-avatar size="56px" class="q-mb-sm">
                     <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
                 </q-avatar>
-                <div class="text-weight-bold">{{ prueba.nombre }}</div>
-                <div>@{{ prueba.username }}</div>
+                <div class="text-weight-bold">{{ cookie.nombre }}</div>
+                <div>@{{ cookie.username }}</div>
             </div>
         </q-img>
 
         <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
             <!-- MENU PARA ADMIN O LO QUE SEA -->
-            <q-list padding v-if="prueba?.usertype === 'admin'">
+            <q-list padding v-if="cookie?.usertype === 'admin'">
                 <!-- Aqui tiene que cambiar el 1 por el propio perfil del admin -->
                 <q-item-label header> Informacion </q-item-label>
                 <q-item clickable v-ripple to="/admin" active-class="my-menu-link"><q-item-section> Inicio </q-item-section> </q-item>
@@ -61,7 +62,7 @@ const currentRoute = ref(route.fullPath);
                 <q-item clickable v-ripple to="/ver/supervisor" active-class="my-menu-link"><q-item-section> Supervisor </q-item-section> </q-item>
             </q-list>
 
-            <q-list padding v-if="prueba?.usertype === 'paciente'">
+            <q-list padding v-if="cookie?.usertype === 'paciente'">
                 <q-item clickable v-ripple to="/verDatos">
                     <q-item-section avatar><q-icon name="account_circle" /></q-item-section>
                     <q-item-section> Perfil </q-item-section>
@@ -73,7 +74,7 @@ const currentRoute = ref(route.fullPath);
                 </q-item>
             </q-list>
 
-            <q-list padding v-if="prueba?.usertype === 'supervisor'">
+            <q-list padding v-if="cookie?.usertype === 'supervisor'">
                 <q-item clickable v-ripple to="/supervisor" active-class="my-menu-link"><q-item-section> Inicio </q-item-section> </q-item>
 
                 <q-item clickable v-ripple to="/revisionTareas" active-class="my-menu-link"><q-item-section> Revisar tareas </q-item-section> </q-item>
@@ -89,13 +90,14 @@ const currentRoute = ref(route.fullPath);
     </q-drawer>
 </template>
 
-<style>
+<style scoped lang="scss">
+@import '../assets/variables.scss';
 .my-menu-link {
     color: white;
-    background-color: #f2c037;
+    background-color: $secondary;
 }
-
-#hola {
-    border: 1px solid #000;
+.offset-left {
+    margin-right: auto;
+    padding-right: 70px; /* Ajusta este valor según tus necesidades */
 }
 </style>
