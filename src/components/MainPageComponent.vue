@@ -64,13 +64,14 @@ font-size: 40px;
   justify-content: center;
   align-items: center;
   height: 100vh;
- background-color: #e8d0b4;
+  background-image: url('../assets/holaa.webp');
+
 }
 
 .content-wrapper {
-  max-width: 500px;
+  max-width: 400px;
   padding: 20px;
-  background-color: #e7c39a;
+  /* background-color: #e7c39a; */
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid black;

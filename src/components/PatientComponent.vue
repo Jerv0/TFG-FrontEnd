@@ -7,7 +7,7 @@ import { ref } from 'vue';
 
 const data: any = store.getCookie('userData') || null;
 
-const mes = ref<number>(5);
+const mes = ref<number>(6);
 const anio = ref<number>(2024);
 
 const meses = <string[]>[
@@ -40,11 +40,10 @@ const cambiarMes = (incremento: number) => {
 
 <template>
  <DrawerAppBar/>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf"  class="color">
     <q-page-container>
       
       <div class="datos">
-       
         <div class="contain">
           <div class="select">
             <button class="flecha" @click="cambiarMes(-1)">←</button>
@@ -67,8 +66,13 @@ const cambiarMes = (incremento: number) => {
 
 <style scoped>
 .large-calendar {
-  width: 700px; /* Ancho personalizado */
-  height: 500px; /* Altura personalizada */
+  width: 700px;  
+  height: 500px; 
+}
+
+
+.color{
+  background-color: #BBE0EB;
 }
 
 * {
@@ -81,6 +85,7 @@ const cambiarMes = (incremento: number) => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 30px;
 }
   
 .contain {
@@ -97,11 +102,11 @@ const cambiarMes = (incremento: number) => {
 .option {
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #c87531;
+    border: 1px solid #1976d2;;
     border-radius: 5px;
     background-color: #fff;
     width: 105px;
-    color: #555; /* Color del texto */
+    color: #555;  
     text-align: center;
 }
 
@@ -119,7 +124,7 @@ const cambiarMes = (incremento: number) => {
     font-size: 16px;
     border: none;
     border-radius: 5px;
-    background-color: #ff651d;
+    background-color: #1976d2;;
     margin-left: 25px;
     margin-right: 25px;
     color: white;
@@ -128,7 +133,7 @@ const cambiarMes = (incremento: number) => {
 }
 
 .flecha:hover {
-    background-color:  #ff651d;
+    background-color:  #1976d2;;
 }
 
 .flechaAnio{
@@ -136,13 +141,11 @@ const cambiarMes = (incremento: number) => {
     font-size: 16px;
     border: none;
     border-radius: 5px;
-    background-color: #ff651d;
+    background-color: #1976d2;;
     margin-left: 45px;
     margin-right: 45px;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
 }
-
-
 </style>

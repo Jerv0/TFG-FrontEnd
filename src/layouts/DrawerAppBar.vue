@@ -39,7 +39,7 @@ const currentRoute = ref(route.fullPath);
     show-if-above
     bordered
   >
-    <!-- Esto se tendria que actualizar con la foto , nombre , etc... de cuando este registrado el usuario -->
+    <!-- Esto se tendria que actualizar con el nombre , etc... de cuando este registrado el usuario -->
     <q-img
       class="absolute-top"
       src="../assets/cielo.png"
@@ -124,10 +124,12 @@ const currentRoute = ref(route.fullPath);
   </q-drawer>
 </template>
 
-<style>
+<style scoped lang="scss">
+@import '../assets/variables.scss';
+
 .my-menu-link {
-  color: white;
-  background-color: #f2c037;
+    color: white;
+   
 }
 
 .nombre,

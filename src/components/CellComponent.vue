@@ -63,7 +63,7 @@ p {
 }
 
 .tareas .titulo {
-  cursor: pointer; /* Cambia el cursor a mano cuando pasas por encima */
+  cursor: pointer;  
 }
 
 .tareas:hover {
@@ -87,7 +87,7 @@ button img {
 
 .done {
   color: green;
-  text-decoration: line-through; /* Tacha el texto */
+  text-decoration: line-through;  
 }
 
 .cell,
@@ -104,6 +104,10 @@ button img {
 .cell input {
   width: 100%;
   box-sizing: border-box;
+}
+
+.fecha{
+  color: #4b4141;
 }
 
 @media (max-width: 1050px){

@@ -121,10 +121,13 @@ onMounted(() => {
 </template>
 
 <style scoped>
+
 .calendar {
   border-collapse: collapse;
-  width: 100%;
+  width: 60%;
   margin: 0 auto;
+  margin-top: 40px;
+
 }
 
 .calendar th, .calendar td {
@@ -142,19 +145,21 @@ onMounted(() => {
 }
 
 .calendar-cell {
-  height: 60px; /* Ajuste de la altura de las celdas */
+  height: 60px;  
 }
 
 .days{
-/*   background-color: #EFC08C; */
 background-color: rgb(94, 102, 182);
 }
 
 .today {
-  background-color: #a8b9ef; /* Color para el día actual */
+  background-color: #a8b9ef;  
 }
 
 @media (max-width: 1360px){
+  .calendar{
+    width: 40%;
+  }
   .calendar-table th {
     width: calc(100% / 7); 
     max-width: calc(100% / 7); 
@@ -171,6 +176,9 @@ background-color: rgb(94, 102, 182);
 }
 
 @media (max-width: 1287px){
+  .calendar{
+    width: 30%;
+  }
   .calendar-table th{
       width: 250px;
       max-width:150px;
@@ -193,12 +201,17 @@ background-color: rgb(94, 102, 182);
 }
 
 @media (max-width: 830px){
+  .calendar{
+    width: 20%;
+  }
   .calendar-table th{
-      max-width:115px;
-    }
+    max-width:115px;
+  }
 
-    .calendar-cell{
-      max-width: 117px;
-    } 
+  .calendar-cell{
+    max-width: 117px;
+  } 
 }
+
+
 </style>
