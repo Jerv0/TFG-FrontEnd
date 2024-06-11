@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">tfg-proyecto</string>
+    <string name="title_activity_main">tfg-proyecto</string>
+    <string name="package_name">com.tfgFront.app</string>
+    <string name="custom_url_scheme">com.tfgFront.app</string>
+</resources>
