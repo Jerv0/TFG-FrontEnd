@@ -69,6 +69,10 @@ const currentRoute = ref(route.fullPath);
                 <q-item clickable v-ripple to="/candidaturas" active-class="my-menu-link"><q-item-section> Candidatos </q-item-section> </q-item>
                 <q-item clickable v-ripple to="/ver/paciente" active-class="my-menu-link"><q-item-section> Pacientes </q-item-section> </q-item>
                 <q-item clickable v-ripple to="/ver/supervisor" active-class="my-menu-link"><q-item-section> Supervisor </q-item-section> </q-item>
+                <q-item clickable v-ripple to="/">
+                    <q-item-section avatar><q-icon name="logout" /></q-item-section>
+                    <q-item-section v-if="store.getCookie('userData')" v-ripple to="/" active-class="my-menu-link" @click="store.removeCookie('userData')">Cerrar sesión</q-item-section>
+                </q-item>
             </q-list>
 
             <q-list padding v-if="cookie?.usertype === 'paciente'">
