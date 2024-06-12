@@ -74,7 +74,7 @@ const onRejected = () => toast('negative', 'Archivo no válido');
                         <div><q-icon :name="validPassword.number ? 'check_circle' : 'cancel'" :color="validPassword.number ? 'positive' : 'negative'" />Tiene que contener al menos un número</div>
                         <div><q-icon :name="validPassword.symbol ? 'check_circle' : 'cancel'" :color="validPassword.symbol ? 'positive' : 'negative'" />Debe contener algún carácter especial: !@.#$%^&*()-_+=</div>
                     </div>
-                    <q-input label="Confirmar Contraseña *" v-model="passwordConfirm" :disable="!validatePassword(password)" type="password" :rules="[(val) => (val && val === password) || 'No coinciden.']" /> 
+                    <q-input label="Confirmar Contraseña *" v-model="passwordConfirm" :disable="!validatePassword(password)" type="password" :rules="[(val) => (val && val === password) || 'No coinciden.']" />
 
                     <div v-if="store.type === CUIDADOR">
                         <q-file v-model="file" filled label="Seleccionar archivo PDF" max-files="1" accept=".pdf" @rejected="onRejected" max-file-size="4096" />
@@ -82,10 +82,9 @@ const onRejected = () => toast('negative', 'Archivo no válido');
 
                     <div class="form-actions">
                         <q-btn label="Enviar" type="submit" color="primary" />
-                        <q-btn  color="accent" label="Cerrar" icon="" @click="closeForm" to="/" />
+                        <q-btn color="accent" label="Cerrar" icon="" @click="closeForm" to="/" />
                     </div>
                 </q-form>
-                
             </div>
         </q-page-container>
     </q-layout>

@@ -104,6 +104,18 @@ const currentRoute = ref(route.fullPath);
                     <q-item-section v-if="store.getCookie('userData')" v-ripple to="/" active-class="my-menu-link" @click="store.removeCookie('userData')"> Cerrar sesión </q-item-section>
                 </q-item>
             </q-list>
+            <q-list padding v-if="cookie?.usertype === 'supervisor'">
+                <q-item clickable v-ripple to="/supervisor" active-class="my-menu-link"><q-item-section> Inicio </q-item-section> </q-item>
+
+                <q-item clickable v-ripple to="/revisionTareas" active-class="my-menu-link"><q-item-section> Revisar tareas </q-item-section> </q-item>
+
+                <q-item clickable v-ripple to="/verDatos" active-class="my-menu-link"><q-item-section> Perfil </q-item-section> </q-item>
+
+                <q-item clickable v-ripple to="/">
+                    <q-item-section avatar><q-icon name="logout" /></q-item-section>
+                    <q-item-section v-if="store.getCookie('userData')" v-ripple to="/" active-class="my-menu-link" @click="store.removeCookie('userData')">Cerrar sesión</q-item-section>
+                </q-item>
+            </q-list>
         </q-scroll-area>
     </q-drawer>
 </template>
