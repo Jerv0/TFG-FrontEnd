@@ -111,6 +111,7 @@ const scrollToBottom = () => {
         chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
     }
 };
+
 const filteredContacts = computed(() => {
     return contacts.value.filter((contact) => contact.nombre.toLowerCase().includes(searchQuery.value.toLowerCase()));
 });
@@ -257,6 +258,37 @@ const getName = (id: string) => {
 
 .send-button {
     margin-left: 8px;
+}
+
+.btn-fixed-width {
+    width: 100px;
+    position: fixed;
+    z-index: 2001; /* Ensure button is above other elements */
+}
+
+.send-message-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+    margin-right: 7px;
+    .q-input {
+        flex-grow: 1;
+    }
+    .send-button {
+        padding: 10px 20px;
+    }
+}
+@media (min-width: 600px) {
+    .chat-container {
+        flex-direction: row;
+    }
+    .contacts-section {
+        max-width: 30%;
+    }
+    .chat-section {
+        max-width: 70%;
+    }
 }
 
 .btn-fixed-width {

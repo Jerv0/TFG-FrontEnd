@@ -73,8 +73,7 @@ const onSubmit = async () => {
                       contact_emerg: form.value.contact_emerg,
                       especialidad_requerida: form.value.especialidad_requerida,
                       medicamentos: form.value.medicamentos,
-                      alergias: form.value.alergias,
-                      id_supervisor: form.value.id_supervisor.value,
+                      alergias: form.value.alergias
                   }
                 : props.type === 'supervisor'
                 ? {
