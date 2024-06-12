@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@capacitor/android": "^6.0.0",
+    "@capacitor/app": "^6.0.0",
     "@quasar/extras": "^1.16.4",
     "axios": "^1.7.0",
     "date-fns": "^3.6.0",
