@@ -10,7 +10,7 @@ const persona = process.env.PERSONA;
 const showForm = ref<boolean>(true);
 const type = ref<string>('');
 
-console.log("hola");
+console.log("sisisisisii");
 //METODOS
 const openForm = (typeP: string) => {
     type.value = typeP;
