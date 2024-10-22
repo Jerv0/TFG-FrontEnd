@@ -13,6 +13,7 @@ const type = ref<string>('');
 console.log("hola");
 
 console.log("mio");
+console.log("sisisisisii");
 //METODOS
 const openForm = (typeP: string) => {
     type.value = typeP;
