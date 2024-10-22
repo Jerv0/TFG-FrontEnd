@@ -10,6 +10,7 @@ const persona = process.env.PERSONA;
 const showForm = ref<boolean>(true);
 const type = ref<string>('');
 
+console.log("hola");
 //METODOS
 const openForm = (typeP: string) => {
     type.value = typeP;
@@ -26,6 +27,7 @@ const closeForm = () => {
     <q-btn align="between" class="btn-fixed-width" color="accent" label="Cuidador" icon="" @click="openForm(cuidador)" />
     <q-btn align="between" class="btn-fixed-width" color="accent" label="Persona" icon="" @click="openForm(persona)" />
     {{ showForm }}
+    
 </template>
 
 <style></style>
