@@ -11,6 +11,8 @@ const showForm = ref<boolean>(true);
 const type = ref<string>('');
 
 console.log("hola");
+
+console.log("mio");
 //METODOS
 const openForm = (typeP: string) => {
     type.value = typeP;
